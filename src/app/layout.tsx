@@ -1,22 +1,28 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import type {Metadata} from 'next'
+import {Inter} from 'next/font/google'
 import './globals.scss'
+import Providers from "@/app/(site)/components/providers/Providers";
+import {PropsWithChildren} from "react";
+import {getServerSession} from "next-auth";
+import authOptions from "@/app/api/auth/[...nextauth]/utils";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({subsets: ['latin']})
 
 export const metadata: Metadata = {
-  title: 'B.R.A.N.C.H',
-  description: 'The Basic School Registration, Announcement and Communication Hub',
+    title: 'B.R.A.N.C.H',
+    description: 'The Basic School Registration, Announcement and Communication Hub',
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
-  )
+export default async function RootLayout({children}: PropsWithChildren) {
+    const session = await getServerSession(authOptions)
+
+    return (
+        <html lang="en">
+        <body className={inter.className}>
+        <Providers session={session}>
+            {children}
+        </Providers>
+        </body>
+        </html>
+    )
 }
