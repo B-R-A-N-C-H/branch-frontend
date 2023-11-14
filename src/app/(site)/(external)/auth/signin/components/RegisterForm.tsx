@@ -5,7 +5,7 @@ import Input, {ValidationErrors} from "@/app/(site)/components/inputs/Input";
 import {PASSWORD_REGEX} from "@/app/utils/regex";
 import {Button, Divider} from "@nextui-org/react";
 import useSWRMutation from "swr/mutation";
-import {handleAxiosError, postMutator} from "@/app/utils/swr-utils";
+import {handleAxiosError, $post} from "@/app/utils/swr-utils";
 import Member from "@/app/utils/types/models/member";
 import toast from "react-hot-toast";
 import {signIn} from "next-auth/react";
@@ -15,7 +15,7 @@ type FormProps = CreateMemberDto & {
 }
 
 const RegisterUser = () => (
-    useSWRMutation("/auth/register", postMutator<CreateMemberDto, Member>())
+    useSWRMutation("/auth/register", $post<CreateMemberDto, Member>())
 )
 
 const RegisterForm: FC = () => {
@@ -42,7 +42,6 @@ const RegisterForm: FC = () => {
                     callbackUrl: "/"
                 })
             })
-            .catch(handleAxiosError)
 
     }, [registerUser, validationErrors])
 

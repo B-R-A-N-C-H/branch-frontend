@@ -4,6 +4,7 @@ import {FC, Fragment} from "react";
 import {Button, Navbar, NavbarBrand, NavbarContent, NavbarItem} from "@nextui-org/react";
 import Link from "next/link";
 import {signOut, useSession} from "next-auth/react";
+import UserProfile from "@/app/(site)/(external)/auth/signin/components/UserProfile";
 
 const NavBar: FC = () => {
     const {status: sessionStatus} = useSession()
@@ -43,11 +44,7 @@ const NavBar: FC = () => {
                         </Fragment>
                     ) : (
                         <Fragment>
-                            <Button
-                                onPress={() => signOut()}
-                            >
-                                Sign Out
-                            </Button>
+                            <UserProfile/>
                         </Fragment>
                     )
                 }

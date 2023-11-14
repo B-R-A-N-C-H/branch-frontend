@@ -1,33 +1,9 @@
 "use client"
 
-import {api} from "@/app/utils/api-utils";
+import {api} from "@/app/utils/api/api-utils";
 import {AxiosError} from "axios";
 import toast from "react-hot-toast";
 import {NestResponse} from "@/app/utils/types/nest";
-
-export async function fetcher<T>(url: string): Promise<NestResponse<T> | undefined> {
-    try {
-        return (await api.get<NestResponse<T>>(url)).data;
-    } catch (e) {
-        console.error(e)
-    }
-}
-
-export async function fetcherWithArgs<A extends Record<string, string>, R>(url: string, args?: MutatorArgs<A>): Promise<NestResponse<R> | undefined> {
-    try {
-        if (args) {
-            const filteredBody = {...args.arg.body}
-            Object.keys(filteredBody).forEach(key => {
-                if (!filteredBody[key])
-                    delete filteredBody[key]
-            })
-            return (await api.get<NestResponse<R>>(url + `?${new URLSearchParams(filteredBody).toString()}`)).data;
-        } else
-            return (await api.get<NestResponse<R>>(url)).data;
-    } catch (e) {
-        console.error(e)
-    }
-}
 
 
 export type MutatorArgs<T> = {
@@ -36,13 +12,74 @@ export type MutatorArgs<T> = {
     }
 }
 
-export const postMutator = <B, R>() => (url: string, {arg}: MutatorArgs<B>) => api.post<NestResponse<R>>(url, arg.body)
-export const postMutatorWithoutArgs = <R, >() => (url: string) => api.post<NestResponse<R>>(url)
-export const patchMutator = <B, R>() => (url: string, {arg}: MutatorArgs<B>) => api.patch<NestResponse<R>>(url, arg.body)
+export const $fetch = <R, >(token?: string) => (url: string): Promise<R | undefined> => api.get<NestResponse<R>>(url, token ? {
+    headers: {
+        authorization: getBearerString(token)
+    }
+} : undefined)
+    .then(res => res.data as R)
+    .catch(handleAxiosError)
 
-export const deleteMutatorWithArgs = <B extends Record<string, string> | undefined, R>() => (url: string, args?: MutatorArgs<B>) => api.delete<NestResponse<R>>(`${url}${args ? "?" + new URLSearchParams(args.arg.body).toString() : ""}`)
-export const deleteMutator = <R, >() => (url: string) => api.delete<NestResponse<R>>(url)
+export const $fetchWithArgs = <A extends Record<string, string>, R>(token?: string) => async (url: string, args?: MutatorArgs<A>): Promise<R | undefined> => {
+    if (args) {
+        const filteredBody = {...args.arg.body}
+        Object.keys(filteredBody).forEach(key => {
+            if (!filteredBody[key])
+                delete filteredBody[key]
+        })
 
+        return api.get<NestResponse<R>>(url + `?${new URLSearchParams(filteredBody).toString()}`, token ? {
+            headers: {
+                authorization: getBearerString(token)
+            }
+        } : undefined)
+            .then(res => res.data as R)
+            .catch(handleAxiosError)
+    } else return $fetch<R>(token)(url)
+}
+
+export const $post = <B, R>(token?: string) => (url: string, {arg}: MutatorArgs<B>) => api.post<NestResponse<R>>(url, arg.body, token ? {
+    headers: {
+        authorization: getBearerString(token)
+    }
+} : undefined)
+    .then(res => res.data as R)
+    .catch(handleAxiosError)
+
+export const $postWithoutArgs = <R, >(token?: string) => (url: string) => api.post<NestResponse<R>>(url, undefined, token ? {
+    headers: {
+        authorization: getBearerString(token)
+    }
+} : undefined)
+    .then(res => res.data as R)
+    .catch(handleAxiosError)
+
+export const $patch = <B, R>(token?: string) => (url: string, {arg}: MutatorArgs<B>) => api.patch<NestResponse<R>>(url, arg.body, token ? {
+    headers: {
+        authorization: getBearerString(token)
+    }
+} : undefined)
+    .then(res => res.data as R)
+    .catch(handleAxiosError)
+
+export const $deleteWithArgs = <B extends Record<string, string> | undefined, R>(token?: string) => (url: string, args?: MutatorArgs<B>) => api.delete<NestResponse<R>>(`${url}${args ? "?" + new URLSearchParams(args.arg.body).toString() : ""}`, token ? {
+    headers: {
+        authorization: getBearerString(token)
+    }
+} : undefined)
+    .then(res => res.data as R)
+    .catch(handleAxiosError)
+
+export const $delete = <R, >(token?: string) => (url: string) => api.delete<NestResponse<R>>(url, token ? {
+    headers: {
+        authorization: getBearerString(token)
+    }
+} : undefined)
+    .then(res => res.data as R)
+    .catch(handleAxiosError)
+
+
+export const getBearerString = (token: string) => `Bearer ${token}`
 
 export function handleAxiosError(error: any): undefined {
     if (!(error instanceof AxiosError)) {
