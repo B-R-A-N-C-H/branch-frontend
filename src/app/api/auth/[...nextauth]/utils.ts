@@ -49,6 +49,7 @@ const authOptions: AuthOptions = {
         })
     ],
     callbacks: {
+        // @ts-ignore
         async jwt({token, user}) {
             if (user)
                 return {...token, ...user}
@@ -58,10 +59,14 @@ const authOptions: AuthOptions = {
 
             const refreshedToken = await refreshToken(token)
             if (!refreshedToken)
-                throw new Error("Refresh token is invalid!")
+                return null
             return refreshedToken
         },
+        // @ts-ignore
         async session({token, session}) {
+            if (!token)
+                return null
+
             session.user = token.member
             session.backendTokens = token.backendTokens
             return session
@@ -75,7 +80,6 @@ declare module "next-auth" {
     interface Session extends DefaultSession, Omit<LoginResponse, "member"> {
         user: Member
     }
-
 
 }
 
