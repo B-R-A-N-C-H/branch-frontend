@@ -5,6 +5,7 @@ import Providers from "@/app/(site)/components/providers/Providers";
 import {PropsWithChildren} from "react";
 import {getServerSession} from "next-auth";
 import authOptions from "@/app/api/auth/[...nextauth]/utils";
+import clsx from "clsx";
 
 const inter = Inter({subsets: ['latin']})
 
@@ -18,7 +19,7 @@ export default async function RootLayout({children}: PropsWithChildren) {
 
     return (
         <html lang="en">
-        <body className={inter.className}>
+        <body className={clsx(inter.className, "overflow-x-hidden")}>
         <Providers session={session}>
             {children}
         </Providers>

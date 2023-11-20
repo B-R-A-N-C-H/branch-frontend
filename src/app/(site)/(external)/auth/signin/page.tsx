@@ -1,11 +1,12 @@
 "use client"
 
 import {FC, useEffect, useState} from "react";
-import {Tab, Tabs, Card, CardBody} from "@nextui-org/react";
+import {Tab, Tabs, Card, CardBody, CardHeader} from "@nextui-org/react";
 import LogInForm from "@/app/(site)/(external)/auth/signin/components/LogInForm";
 import {useSession} from "next-auth/react";
 import {useRouter, useSearchParams} from "next/navigation";
 import RegisterForm from "@/app/(site)/(external)/auth/signin/components/RegisterForm";
+import Link from "next/link";
 
 const SignInPage: FC = () => {
     const {data: sessionData, status: sessionStatus} = useSession()
@@ -19,9 +20,22 @@ const SignInPage: FC = () => {
     }, [router, sessionData, sessionStatus])
 
     return (
-        <main className="flex justify-center py-24 h-full">
+        <main className="flex justify-center py-24 h-screen"
+              style={{
+                  backgroundImage: 'url("/assets/hero-bg.jpg")',
+              }}>
             {sessionStatus === 'unauthenticated' && (
-                <Card className="w-1/2 tablet:w-3/4 phone:w-[90%]">
+                <Card
+                    className="w-1/2 tablet:w-3/4 phone:w-[90%] h-fit"
+                    classNames={{
+                        header: "flex justify-center items-center my-2"
+                    }}
+                >
+                    <CardHeader>
+                        <Link href="/" className="font-bold text-2xl text-primary">
+                            BRANCH
+                        </Link>
+                    </CardHeader>
                     <CardBody>
                         <Tabs
                             aria-label="Options"
@@ -29,6 +43,7 @@ const SignInPage: FC = () => {
                             size='lg'
                             classNames={{
                                 base: "justify-center",
+                                tabList: "bg-secondary/20 border-primary/30 border"
                             }}
                             onSelectionChange={(key) => setSelectedTab(key as string)}
                             selectedKey={selectedTab}

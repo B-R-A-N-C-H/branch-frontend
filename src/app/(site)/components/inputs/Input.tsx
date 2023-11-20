@@ -55,7 +55,10 @@ const Input: FC<InputProps> = ({classNames, id, register, errors, setValidationE
         id,
         color: "primary",
         size: "lg",
-        classNames: classNames,
+        classNames: {
+            inputWrapper: "border border-primary/30",
+            ...classNames
+        },
         isInvalid: errMsg != undefined,
         endContent: type === "password" &&
             <div className="cursor-pointer" onClick={() => setPasswordVisible(prev => !prev)}>

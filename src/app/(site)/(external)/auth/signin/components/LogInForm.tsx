@@ -50,7 +50,6 @@ const LogInForm: FC = () => {
                 label="Email Address"
                 type="email"
             />
-            <Spacer y={6} />
             <Input
                 id="password"
                 isRequired

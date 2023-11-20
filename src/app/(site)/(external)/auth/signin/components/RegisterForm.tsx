@@ -58,7 +58,7 @@ const RegisterForm: FC = () => {
                 isClearable
                 isDisabled={isRegistering}
             />
-            <div className="flex gap-6">
+            <div className="flex phone:flex-col gap-6">
                 <Input
                     id="firstName"
                     label="Last Name"
