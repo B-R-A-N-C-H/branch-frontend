@@ -47,7 +47,7 @@ const NavBar: FC = () => {
             </NavbarContent>
             <NavbarContent className="gap-16 laptop:hidden">
                 <NavbarItem>
-                    <Link href="/">
+                    <Link href="/#about">
                         ABOUT
                     </Link>
                 </NavbarItem>
@@ -96,7 +96,7 @@ const NavBar: FC = () => {
             </NavbarContent>
             <NavbarMenu>
                 <NavbarMenuItem>
-                    <Link href="/">
+                    <Link href="/#about">
                         ABOUT
                     </Link>
                 </NavbarMenuItem>
