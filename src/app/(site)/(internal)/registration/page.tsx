@@ -1,0 +1,22 @@
+import {FC} from "react";
+import Title from "@/app/(site)/components/Title";
+import {Metadata} from "next";
+import RegistrationContainer from "@/app/(site)/(internal)/registration/components/RegistrationContainer";
+import {Spacer} from "@nextui-org/react";
+
+export const metadata: Metadata = {
+    title: "BRANCH - Registration",
+    description: "Seamlessly register your child."
+}
+
+const RegistrationPage: FC = () => {
+    return (
+        <main className="p-16">
+            <Title className="text-5xl py-1">Registration</Title>
+            <Spacer y={12} />
+            <RegistrationContainer />
+        </main>
+    )
+}
+
+export default RegistrationPage

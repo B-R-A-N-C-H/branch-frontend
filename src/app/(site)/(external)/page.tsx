@@ -74,7 +74,7 @@ export default function Home() {
                 id="about"
                 className="py-16 mx-auto max-w-[50%] phone:max-w-[80%] laptop:max-w-[75%] space-y-12"
             >
-                <Article title="About Branch" imageUrl="/assets/student-studying.svg">
+                <Article title="About BRANCH" imageUrl="/assets/student-studying.svg">
                     B.R.A.N.C.H, which stands for Basic Schools’ Registration Administration and Communications
                     Hub, is a cutting-edge web-based application designed to revolutionize the administrative
                     processes within educational institutions. Born out of a vision to streamline registration

@@ -24,7 +24,7 @@ const config: Config = {
                 primary: "#00ca82",
                 subtext: "#828282",
                 secondary: "#009471",
-                danger: "#ff4524",
+                danger: "#ff2424",
             }
         },
     },

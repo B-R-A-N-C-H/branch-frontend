@@ -31,8 +31,8 @@ const NavBar: FC = () => {
             position="static"
             className={clsx(isBannedRoute && "hidden")}
             classNames={{
-                base: "!bg-white/20 absolute",
-                menu: "!bg-white/20 absolute",
+                base: "!bg-secondary",
+                menu: "!bg-white/20",
                 item: "text-white hover:text-primary ease-in-out duration-300",
                 menuItem: "text-white hover:text-secondary ease-in-out duration-300"
             }}

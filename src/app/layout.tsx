@@ -10,7 +10,7 @@ import clsx from "clsx";
 const inter = Inter({subsets: ['latin']})
 
 export const metadata: Metadata = {
-    title: 'B.R.A.N.C.H',
+    title: 'BRANCH',
     description: 'The Basic School Registration, Announcement and Communication Hub',
 }
 

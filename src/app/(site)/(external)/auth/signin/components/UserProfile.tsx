@@ -63,7 +63,7 @@ const UserProfile: FC = () => {
                         isReadOnly
                         startContent={<GraduationCapIcon/>}
                     >
-                        <Link href="/">
+                        <Link href="/registration">
                             Registration
                         </Link>
                     </DropdownItem>
