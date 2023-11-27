@@ -1,6 +1,6 @@
 "use client"
 
-import {FC, Key, useCallback, useMemo} from "react";
+import {FC, Key, ReactElement, useCallback, useMemo} from "react";
 import Table, {Column} from "@/app/(site)/components/Table";
 import {RegistrationEntry} from "@/app/utils/types/models/registration";
 import {Button, Chip, TableCell, TableRow} from "@nextui-org/react";
@@ -9,7 +9,12 @@ import CircledCheckIcon from "@/app/(site)/components/icons/CircledCheckIcon";
 import CircledXIcon from "@/app/(site)/components/icons/CircledXIcon";
 import PendingIcon from "@/app/(site)/components/icons/PendingIcon";
 
-const RegisteredStudentsTable: FC = () => {
+type Props = {
+    entries: RegistrationEntry[],
+    actionContent: ReactElement[] | ReactElement
+}
+
+const RegisteredStudentsTable: FC<Props> = ({entries, actionContent}) => {
     const columns = useMemo<Column[]>(() => ([
         {
             key: "student_name",
@@ -74,39 +79,17 @@ const RegisteredStudentsTable: FC = () => {
                         >
                             <TrashIcon/>
                         </Button>
+
                     </div>
                 )
             }
         }
     }, [])
 
-    // TODO: Replace with students from API call
-    const registeredStudents = useMemo<RegistrationEntry[]>(() => ([
-        {
-            id: "12345",
-            approved: null,
-            memberId: "23456",
-            by: null,
-            gradeLevel: 1,
-            childFirstName: "John",
-            childLastName: "Doe",
-            childDateOfBirth: new Date().toString(),
-            streetName: "Somewhere",
-            city: "SomeCity",
-            parish: "Kingston",
-            emergencyContactNumber: "anumber",
-            secondaryEmergencyContactNumber: "anumber",
-            registrationPeriodId: "34456",
-            for: null,
-            createdAt: new Date().toString(),
-            updatedAt: new Date().toString(),
-        },
-    ]), [])
-
     return (
         <Table
             columns={columns}
-            items={registeredStudents}
+            items={entries}
         >
             {(entry) => (
                 <TableRow key={entry.id}>

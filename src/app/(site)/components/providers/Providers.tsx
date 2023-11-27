@@ -7,6 +7,7 @@ import NavBar from "@/app/(site)/components/NavBar";
 import {SessionProvider} from "next-auth/react";
 import {Session} from "next-auth";
 import {Toaster} from "react-hot-toast";
+import {AppProgressBar} from "next-nprogress-bar";
 
 type Props = PropsWithChildren & {
     session: Session | null
@@ -17,6 +18,12 @@ const Providers: FC<Props> = ({children, session}) => {
         <SWRConfig>
             <NextUIProvider>
                 <SessionProvider session={session}>
+                    <AppProgressBar
+                        height="4px"
+                        color="#00ca82"
+                        options={{showSpinner: true}}
+                        shallowRouting
+                    />
                     <Toaster
                         position="top-center"
                         reverseOrder

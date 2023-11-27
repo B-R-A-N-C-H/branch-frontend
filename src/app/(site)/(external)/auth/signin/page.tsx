@@ -21,9 +21,9 @@ const SignInPage: FC = () => {
 
     return (
         <main className="flex justify-center py-24 h-screen"
-              style={{
-                  backgroundImage: 'url("/assets/hero-bg.jpg")',
-              }}>
+             style={{
+                 backgroundImage: 'url("/assets/hero-bg.jpg")',
+             }}>
             {sessionStatus === 'unauthenticated' && (
                 <Card
                     className="w-1/2 tablet:w-3/4 phone:w-[90%] h-fit"

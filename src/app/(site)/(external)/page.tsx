@@ -5,7 +5,7 @@ import RoundedFilledArrowIcon from "@/app/(site)/components/icons/RoundedFilledA
 import GraduationCapIcon from "@/app/(site)/components/icons/GraduationCapIcon";
 import ChatBubbleIcon from "@/app/(site)/components/icons/ChatBubbleIcon";
 import Article from "@/app/(site)/components/Article";
-import {useRef} from "react";
+import {Fragment, useRef} from "react";
 
 export default function Home() {
     const aboutRef = useRef<HTMLDivElement>(null)

@@ -75,7 +75,7 @@ const UserProfile: FC = () => {
                                     isReadOnly
                                     startContent={<CheckListIcon width={20}/>}
                                 >
-                                    <Link href="/">
+                                    <Link href="/admin/registrations">
                                         Manage Registrations
                                     </Link>
                                 </DropdownItem>

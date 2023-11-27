@@ -4,6 +4,9 @@ import {api} from "@/app/utils/api/api-utils";
 import {AxiosError} from "axios";
 import toast from "react-hot-toast";
 import {NestResponse} from "@/app/utils/types/nest";
+import useSWR, {SWRHook} from "swr";
+import {useSession} from "next-auth/react";
+import useSWRMutation from "swr/mutation";
 
 
 export type MutatorArgs<T> = {
@@ -12,13 +15,25 @@ export type MutatorArgs<T> = {
     }
 }
 
-export const $fetch = <R, >(token?: string) => (url: string): Promise<R | undefined> => api.get<NestResponse<R>>(url, token ? {
-    headers: {
-        authorization: getBearerString(token)
-    }
-} : undefined)
-    .then(res => res.data as R)
-    .catch(handleAxiosError)
+export const useAuthorizedSWR = <R>(url: string, cb: (token?: string) => (url: string) => Promise<R | undefined>) => {
+    const {data: session} = useSession()
+    return useSWR(session && url, cb(session?.backendTokens.accessToken))
+}
+
+export const useAuthorizedSWRMutation = <A, R>(url: string, cb: (token?: string) => (url: string, args: MutatorArgs<A>) => Promise<R | undefined>) => {
+    const {data: session} = useSession()
+    return useSWRMutation(session && url, cb(session?.backendTokens.accessToken))
+}
+
+
+export const $fetch = <R>(token?: string) =>
+    (url: string) => api.get<NestResponse<R>>(url, token ? {
+        headers: {
+            authorization: getBearerString(token)
+        }
+    } : undefined)
+        .then(res => res.data as R)
+        .catch(handleAxiosError)
 
 export const $fetchWithArgs = <A extends Record<string, string>, R>(token?: string) => async (url: string, args?: MutatorArgs<A>): Promise<R | undefined> => {
     if (args) {
@@ -46,7 +61,7 @@ export const $post = <B, R>(token?: string) => (url: string, {arg}: MutatorArgs<
     .then(res => res.data as R)
     .catch(handleAxiosError)
 
-export const $postWithoutArgs = <R, >(token?: string) => (url: string) => api.post<NestResponse<R>>(url, undefined, token ? {
+export const $postWithoutArgs = <R>(token?: string) => (url: string) => api.post<NestResponse<R>>(url, undefined, token ? {
     headers: {
         authorization: getBearerString(token)
     }
@@ -70,7 +85,7 @@ export const $deleteWithArgs = <B extends Record<string, string> | undefined, R>
     .then(res => res.data as R)
     .catch(handleAxiosError)
 
-export const $delete = <R, >(token?: string) => (url: string) => api.delete<NestResponse<R>>(url, token ? {
+export const $delete = <R>(token?: string) => (url: string) => api.delete<NestResponse<R>>(url, token ? {
     headers: {
         authorization: getBearerString(token)
     }
