@@ -25,6 +25,11 @@ export const useAuthorizedSWRMutation = <A, R>(url: string, cb: (token?: string)
     return useSWRMutation(session && url, cb(session?.backendTokens.accessToken))
 }
 
+export const useAuthorizedSWRMutationWithoutArgs = <R>(url: string, cb: (token?: string) => (url: string) => Promise<R | undefined>) => {
+    const {data: session} = useSession()
+    return useSWRMutation(session && url, cb(session?.backendTokens.accessToken))
+}
+
 
 export const $fetch = <R>(token?: string) =>
     (url: string) => api.get<NestResponse<R>>(url, token ? {

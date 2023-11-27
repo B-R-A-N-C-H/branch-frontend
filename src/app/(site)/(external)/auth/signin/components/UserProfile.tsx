@@ -120,7 +120,7 @@ const UserProfile: FC = () => {
                                     isReadOnly
                                     startContent={<UserIcon width={20}/>}
                                 >
-                                    <Link href="/">
+                                    <Link href="/admin/users">
                                         Manage Users
                                     </Link>
                                 </DropdownItem>
