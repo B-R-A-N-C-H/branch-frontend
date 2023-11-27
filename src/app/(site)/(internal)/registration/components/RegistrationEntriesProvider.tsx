@@ -18,7 +18,11 @@ interface RegistrationEntriesContextProps extends DataContextProps {
 
 const [RegistrationEntriesContext, hook] = createDataContext<RegistrationEntriesContextProps>("useRegistrationEntries must be used within a RegistrationEntriesProvider!")
 
-const RegistrationEntriesProvider: FC<PropsWithChildren> = ({children}) => {
+type Props = {
+    periodId: string,
+} & PropsWithChildren
+
+const RegistrationEntriesProvider: FC<Props> = ({children, periodId}) => {
     const {data: session} = useSession()
     const {
         data: entries,
