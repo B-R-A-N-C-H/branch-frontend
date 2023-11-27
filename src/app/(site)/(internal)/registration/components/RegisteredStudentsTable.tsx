@@ -11,10 +11,10 @@ import PendingIcon from "@/app/(site)/components/icons/PendingIcon";
 
 type Props = {
     entries: RegistrationEntry[],
-    actionContent: ReactElement[] | ReactElement
+    actionContent?: ReactElement[] | ReactElement
 }
 
-const RegisteredStudentsTable: FC<Props> = ({entries, actionContent}) => {
+const RegisteredStudentsTable: FC<Props> = ({entries, actionContent = []}) => {
     const columns = useMemo<Column[]>(() => ([
         {
             key: "student_name",
