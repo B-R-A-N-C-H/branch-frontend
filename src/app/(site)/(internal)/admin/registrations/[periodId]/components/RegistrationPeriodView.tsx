@@ -34,10 +34,10 @@ const RegistrationPeriodView: FC<Props> = ({periodId}) => {
                     <Spacer y={3}/>
                     <Card className="w-fit px-6 py-2 font-semibold">
                         <CardBody className="block text-left">
-                            <p className="text-sm text-secondary">Opens: {new Date(period.starts).toLocaleString("en-JM", {
+                            <p className="text-sm text-secondary">Opens: {new Date(period!.starts).toLocaleString("en-JM", {
                                 dateStyle: "medium"
                             })}</p>
-                            <p className="text-sm text-secondary">Ends: {new Date(period.ends).toLocaleString("en-JM", {
+                            <p className="text-sm text-secondary">Ends: {new Date(period!.ends).toLocaleString("en-JM", {
                                 dateStyle: "medium"
                             })}</p>
                         </CardBody>

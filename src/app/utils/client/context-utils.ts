@@ -1,7 +1,6 @@
 "use client"
 import {KeyedMutator, MutatorOptions} from "swr";
 import {Context, createContext, Dispatch, SetStateAction, useCallback, useContext} from "react";
-import {remove} from "immutable";
 
 /**
  * `T - State Data Type`, `O - Optimistic Data Type`
@@ -29,7 +28,7 @@ export type DataContextState<T, O> = {
 export type OptimisticWorker<T> = (work: () => Promise<T | undefined | null>, data: T, options?: Omit<MutatorOptions, 'optimisticData'>) => Promise<void>
 
 export const useOptimisticArrayAdd = <T>(currentArray: T[] | undefined, mutateArray: KeyedMutator<T[] | undefined>, options?: Omit<MutatorOptions, 'optimisticData'>) =>
-    useCallback<OptimisticWorker<T>>(async (work, optimisticData, options) => {
+    useCallback<OptimisticWorker<T>>(async (work, optimisticData) => {
         if (!currentArray)
             return
         const mutate = mutateArray
@@ -46,10 +45,10 @@ export const useOptimisticArrayAdd = <T>(currentArray: T[] | undefined, mutateAr
             revalidate: false,
             ...options
         })
-    }, [currentArray, mutateArray])
+    }, [currentArray, mutateArray, options])
 
 export const useOptimisticArrayRemove = <T>(currentArray: T[] | undefined, mutateArray: KeyedMutator<T[] | undefined>, removeLogic: (arr: T[], removedData: T) => T[], options?: Omit<MutatorOptions, 'optimisticData'>) =>
-    useCallback<OptimisticWorker<T>>(async (work, optimisticData, options) => {
+    useCallback<OptimisticWorker<T>>(async (work, optimisticData) => {
         if (!currentArray)
             return
         const mutate = mutateArray
@@ -64,8 +63,9 @@ export const useOptimisticArrayRemove = <T>(currentArray: T[] | undefined, mutat
             optimisticData: removeLogic(currentArray, optimisticData),
             rollbackOnError: true,
             revalidate: false,
+            ...options
         })
-    }, [currentArray, mutateArray, removeLogic])
+    }, [currentArray, mutateArray, options, removeLogic])
 
 export const useOptimisticArrayEdit = <T>(currentArray: T[] | undefined, mutateArray: KeyedMutator<T[] | undefined>, removeLogic: (arr: T[], removedData: T) => T[], options?: Omit<MutatorOptions, 'optimisticData'>) =>
     useCallback<OptimisticWorker<T>>(async (work, optimisticData) => {
@@ -93,7 +93,7 @@ export const useOptimisticArrayEdit = <T>(currentArray: T[] | undefined, mutateA
             revalidate: false,
             ...options
         })
-    }, [currentArray, mutateArray, removeLogic])
+    }, [currentArray, mutateArray, options, removeLogic])
 
 export interface DataContextProps {
     [K: string]: DataContextState<any, any>
