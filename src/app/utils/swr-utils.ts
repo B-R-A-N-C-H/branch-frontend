@@ -31,7 +31,7 @@ export const useAuthorizedSWRMutationWithoutArgs = <R>(url: string, cb: (token?:
 }
 
 
-export const $fetch = <R>(token?: string) =>
+export const $get = <R>(token?: string) =>
     (url: string) => api.get<NestResponse<R>>(url, token ? {
         headers: {
             authorization: getBearerString(token)
@@ -40,7 +40,7 @@ export const $fetch = <R>(token?: string) =>
         .then(res => res.data as R)
         .catch(handleAxiosError)
 
-export const $fetchWithArgs = <A extends Record<string, string>, R>(token?: string) => async (url: string, args?: MutatorArgs<A>): Promise<R | undefined> => {
+export const $getWithArgs = <A extends Record<string, string>, R>(token?: string) => async (url: string, args?: MutatorArgs<A>): Promise<R | undefined> => {
     if (args) {
         const filteredBody = {...args.arg.body}
         Object.keys(filteredBody).forEach(key => {
@@ -55,7 +55,7 @@ export const $fetchWithArgs = <A extends Record<string, string>, R>(token?: stri
         } : undefined)
             .then(res => res.data as R)
             .catch(handleAxiosError)
-    } else return $fetch<R>(token)(url)
+    } else return $get<R>(token)(url)
 }
 
 export const $post = <B, R>(token?: string, config?: AxiosRequestConfig) => (url: string, {arg}: MutatorArgs<B>) => api.post<NestResponse<R>>(url, arg.body, token || config ? {

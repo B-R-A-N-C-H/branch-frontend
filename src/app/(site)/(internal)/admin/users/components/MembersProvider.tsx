@@ -8,7 +8,7 @@ import {
 } from "@/app/utils/client/context-utils";
 import Member from "@/app/utils/types/models/member";
 import {FC, PropsWithChildren, useCallback} from "react";
-import {$fetch, useAuthorizedSWR} from "@/app/utils/swr-utils";
+import {$get, useAuthorizedSWR} from "@/app/utils/swr-utils";
 import {KeyedMutator} from "swr";
 
 interface MembersContextProps extends DataContextProps {
@@ -22,7 +22,7 @@ const MembersProvider: FC<PropsWithChildren> = ({children}) => {
         data: members,
         isLoading: membersLoading,
         mutate: mutateMembers
-    } = useAuthorizedSWR('/members', $fetch<Member[]>)
+    } = useAuthorizedSWR('/members', $get<Member[]>)
 
     const addOptimisticMember = useOptimisticArrayAdd<Member>(members, mutateMembers)
 

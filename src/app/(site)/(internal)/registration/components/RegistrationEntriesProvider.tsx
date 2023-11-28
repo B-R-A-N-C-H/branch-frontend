@@ -9,7 +9,7 @@ import {
 } from "@/app/utils/client/context-utils";
 import {RegistrationEntry} from "@/app/utils/types/models/registration";
 import useSWR, {KeyedMutator} from "swr";
-import {$fetch} from "@/app/utils/swr-utils";
+import {$get} from "@/app/utils/swr-utils";
 import {useSession} from "next-auth/react";
 import {
     useRegistrationPeriods
@@ -29,7 +29,7 @@ const RegistrationEntriesProvider: FC<Props> = ({children}) => {
         data: entries,
         isLoading: entriesLoading,
         mutate: mutateEntries
-    } = useSWR(session && `/registration/entries`, $fetch<RegistrationEntry[]>(session?.backendTokens.accessToken))
+    } = useSWR(session && `/registration/entries`, $get<RegistrationEntry[]>(session?.backendTokens.accessToken))
 
     const addOptimisticEntry = useCallback<OptimisticWorker<RegistrationEntry>>(async (work, optimisticEntry, options) => {
         if (!entries)

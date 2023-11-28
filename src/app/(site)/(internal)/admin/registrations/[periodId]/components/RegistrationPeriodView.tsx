@@ -3,7 +3,7 @@
 import {FC, Fragment, useEffect, useMemo} from "react";
 import useProtectedRoute from "@/app/(site)/(internal)/admin/hooks/useProtectedRoute";
 import {Role} from "@/app/utils/types/models/member";
-import {$fetch, useAuthorizedSWR} from "@/app/utils/swr-utils";
+import {$get, useAuthorizedSWR} from "@/app/utils/swr-utils";
 import {RegistrationEntry, RegistrationPeriod} from "@/app/utils/types/models/registration";
 import {Button, Card, CardBody, CardHeader, Spacer, Spinner} from "@nextui-org/react";
 import {useRouter} from "next/navigation";
@@ -23,7 +23,7 @@ type Props = {
 }
 
 const FetchRegistrationPeriod = (periodId: string) =>
-    useAuthorizedSWR(`registration/periods/${periodId}`, $fetch<RegistrationPeriod>)
+    useAuthorizedSWR(`registration/periods/${periodId}`, $get<RegistrationPeriod>)
 
 const RegistrationPeriodView: FC<Props> = ({periodId}) => {
     useProtectedRoute(Role.HEAD_TEACHER, Role.PRINCIPAL, Role.ADMIN)

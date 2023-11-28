@@ -85,7 +85,7 @@ const UserProfile: FC = () => {
                         memberHasRole(member, Role.TEACHER) ? (
                                 <DropdownItem
                                     as={Link}
-                                    href="/" key="manage_announcements"
+                                    href="/admin/announcements" key="manage_announcements"
                                     color="secondary"
                                     isReadOnly
                                     startContent={<ChatBubbleIcon width={20}/>}
@@ -99,7 +99,7 @@ const UserProfile: FC = () => {
                         memberHasRole(member, Role.HEAD_TEACHER) ? (
                                 <DropdownItem
                                     as={Link}
-                                    href="/"
+                                    href="/admin/events"
                                     key="manage_events"
                                     color="secondary"
                                     isReadOnly
@@ -115,7 +115,7 @@ const UserProfile: FC = () => {
                                 <DropdownItem
                                     as={Link}
                                     href="/admin/users"
-                                    key="manage_registrations"
+                                    key="manage_users"
                                     color="secondary"
                                     isReadOnly
                                     startContent={<UserIcon width={20}/>}

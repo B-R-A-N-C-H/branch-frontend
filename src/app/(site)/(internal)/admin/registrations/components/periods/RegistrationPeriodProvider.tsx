@@ -9,7 +9,7 @@ import {
 import {FC, PropsWithChildren} from "react";
 import {RegistrationPeriod} from "@/app/utils/types/models/registration";
 import {KeyedMutator} from "swr";
-import {$fetch, useAuthorizedSWR} from "@/app/utils/swr-utils";
+import {$get, useAuthorizedSWR} from "@/app/utils/swr-utils";
 
 interface Context extends DataContextProps {
     periods: DataContextState<RegistrationPeriod[], RegistrationPeriod> & {
@@ -24,7 +24,7 @@ const RegistrationPeriodProvider: FC<PropsWithChildren> = ({children}) => {
         data: periods,
         isLoading: periodsLoading,
         mutate: mutatePeriods
-    } = useAuthorizedSWR('/registration/periods', $fetch<RegistrationPeriod[]>)
+    } = useAuthorizedSWR('/registration/periods', $get<RegistrationPeriod[]>)
 
     const currentPeriod = periods?.find(period => {
         const today = new Date()

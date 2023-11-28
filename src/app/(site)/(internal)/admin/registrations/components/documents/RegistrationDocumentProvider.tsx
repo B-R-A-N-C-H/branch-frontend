@@ -6,7 +6,7 @@ import {
 } from "@/app/utils/client/context-utils";
 import {RegistrationDocument} from "@/app/utils/types/models/registration";
 import {FC, PropsWithChildren} from "react";
-import {$fetch, useAuthorizedSWR} from "@/app/utils/swr-utils";
+import {$get, useAuthorizedSWR} from "@/app/utils/swr-utils";
 import {KeyedMutator} from "swr";
 
 interface Context extends DataContextProps {
@@ -20,7 +20,7 @@ const RegistrationDocumentProvider: FC<PropsWithChildren> = ({children}) => {
         data: documents,
         isLoading: documentsLoading,
         mutate: mutateDocuments
-    } = useAuthorizedSWR('/registration/documents', $fetch<RegistrationDocument[]>)
+    } = useAuthorizedSWR('/registration/documents', $get<RegistrationDocument[]>)
 
     const addOptimisticDocument = useOptimisticArrayAdd<RegistrationDocument>(documents, mutateDocuments)
 
