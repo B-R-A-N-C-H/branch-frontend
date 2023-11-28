@@ -11,6 +11,9 @@ import {RegistrationEntry} from "@/app/utils/types/models/registration";
 import useSWR, {KeyedMutator} from "swr";
 import {$fetch} from "@/app/utils/swr-utils";
 import {useSession} from "next-auth/react";
+import {
+    useRegistrationPeriods
+} from "@/app/(site)/(internal)/admin/registrations/components/periods/RegistrationPeriodProvider";
 
 interface RegistrationEntriesContextProps extends DataContextProps {
     entries: DataContextState<RegistrationEntry[], RegistrationEntry>
@@ -18,11 +21,9 @@ interface RegistrationEntriesContextProps extends DataContextProps {
 
 const [RegistrationEntriesContext, hook] = createDataContext<RegistrationEntriesContextProps>("useRegistrationEntries must be used within a RegistrationEntriesProvider!")
 
-type Props = {
-    periodId: string,
-} & PropsWithChildren
+type Props = {} & PropsWithChildren
 
-const RegistrationEntriesProvider: FC<Props> = ({children, periodId}) => {
+const RegistrationEntriesProvider: FC<Props> = ({children}) => {
     const {data: session} = useSession()
     const {
         data: entries,

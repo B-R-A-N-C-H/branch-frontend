@@ -6,8 +6,14 @@ import GraduationCapIcon from "@/app/(site)/components/icons/GraduationCapIcon";
 import RegisteredStudentsTable from "@/app/(site)/(internal)/registration/components/RegisteredStudentsTable";
 import Title from "@/app/(site)/components/Title";
 import RegistrationModal from "@/app/(site)/(internal)/registration/components/RegistrationModal";
+import {useRegistrationEntries} from "@/app/(site)/(internal)/registration/components/RegistrationEntriesProvider";
+import {
+    useRegistrationPeriods
+} from "@/app/(site)/(internal)/admin/registrations/components/periods/RegistrationPeriodProvider";
 
 const RegistrationContainer: FC = () => {
+    const {periods: {currentPeriod}} = useRegistrationPeriods()
+    const {entries: {data: entryArr}} = useRegistrationEntries()
     const [modalOpen, setModalOpen] = useState(false)
 
     return (
@@ -17,6 +23,7 @@ const RegistrationContainer: FC = () => {
                 onClose={() => setModalOpen(false)}
             />
             <Button
+                isDisabled={!currentPeriod}
                 startContent={<GraduationCapIcon/>}
                 color="primary"
                 variant="shadow"
@@ -26,28 +33,7 @@ const RegistrationContainer: FC = () => {
             <Spacer y={12}/>
             <Title className="font-semibold">Your Registrations</Title>
             <Spacer y={4}/>
-            <RegisteredStudentsTable entries={[
-                // TODO: Replace with students from API call
-                {
-                    id: "12345",
-                    approved: null,
-                    memberId: "23456",
-                    by: null,
-                    gradeLevel: 1,
-                    childFirstName: "John",
-                    childLastName: "Doe",
-                    childDateOfBirth: new Date().toString(),
-                    streetName: "Somewhere",
-                    city: "SomeCity",
-                    parish: "Kingston",
-                    emergencyContactNumber: "anumber",
-                    secondaryEmergencyContactNumber: "anumber",
-                    registrationPeriodId: "34456",
-                    for: null,
-                    createdAt: new Date().toString(),
-                    updatedAt: new Date().toString(),
-                },
-            ]}/>
+            <RegisteredStudentsTable entries={entryArr}/>
         </div>
     )
 }

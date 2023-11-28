@@ -56,7 +56,7 @@ const Input: FC<InputProps> = ({classNames, id, register, errors, setValidationE
         color: "primary",
         size: "lg",
         classNames: {
-            inputWrapper: "border border-primary/30",
+            inputWrapper: "border border-primary/30 bg-primary/10 hover:!bg-primary/20",
             ...classNames
         },
         isInvalid: errMsg != undefined,

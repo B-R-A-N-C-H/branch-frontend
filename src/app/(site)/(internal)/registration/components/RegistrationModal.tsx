@@ -7,6 +7,11 @@ import {Button, Divider} from "@nextui-org/react";
 import RegistrationFormProvider from "@/app/(site)/(internal)/registration/components/RegistrationFormProvider";
 import RegistrationGeneralInfoForm from "@/app/(site)/(internal)/registration/components/RegistrationGeneralInfoForm";
 import RegistrationContactInfoForm from "@/app/(site)/(internal)/registration/components/RegistrationContactInfoForm";
+import RegistrationDocumentProvider
+    from "@/app/(site)/(internal)/admin/registrations/components/documents/RegistrationDocumentProvider";
+import RegistrationDocumentsContainer
+    from "@/app/(site)/(internal)/registration/components/RegistrationDocumentsContainer";
+import {CheckIcon} from "@nextui-org/shared-icons";
 
 type Props = {
     isOpen: boolean,
@@ -29,7 +34,7 @@ const RegistrationModal: FC<Props> = ({isOpen, onClose}) => {
             }}
             title="Register Your Child"
         >
-            <RegistrationFormProvider>
+            <RegistrationFormProvider onSubmit={onClose}>
                 <Tabs
                     disableAnimation={false}
                     color="primary"
@@ -65,7 +70,9 @@ const RegistrationModal: FC<Props> = ({isOpen, onClose}) => {
                         </div>
                     </Tab>
                     <Tab key="documents" title="Registration Documents">
-                        documents!
+                        <RegistrationDocumentProvider>
+                            <RegistrationDocumentsContainer/>
+                        </RegistrationDocumentProvider>
                         <Divider className="my-6"/>
                         <div className="flex justify-end gap-4">
                             <Button
@@ -74,10 +81,11 @@ const RegistrationModal: FC<Props> = ({isOpen, onClose}) => {
                                 variant="shadow"
                             >Go Back</Button>
                             <Button
-                                onPress={() => setSelectedTab("documents")}
+                                type="submit"
                                 color="secondary"
                                 variant="shadow"
-                            >Continue</Button>
+                                startContent={<CheckIcon/>}
+                            >Submit Registration</Button>
                         </div>
                     </Tab>
                 </Tabs>

@@ -1,3 +1,5 @@
+"use client"
+
 import {
     createDataContext,
     DataContextProps,
@@ -10,7 +12,9 @@ import {KeyedMutator} from "swr";
 import {$fetch, useAuthorizedSWR} from "@/app/utils/swr-utils";
 
 interface Context extends DataContextProps {
-    periods: DataContextState<RegistrationPeriod[], RegistrationPeriod>
+    periods: DataContextState<RegistrationPeriod[], RegistrationPeriod> & {
+        currentPeriod?: RegistrationPeriod
+    }
 }
 
 const [Context, hook] = createDataContext<Context>("useRegistrationPeriod must be used in a RegistrationPeriodProvider")
@@ -21,6 +25,11 @@ const RegistrationPeriodProvider: FC<PropsWithChildren> = ({children}) => {
         isLoading: periodsLoading,
         mutate: mutatePeriods
     } = useAuthorizedSWR('/registration/periods', $fetch<RegistrationPeriod[]>)
+
+    const currentPeriod = periods?.find(period => {
+        const today = new Date()
+        return new Date(period.starts) <= today && new Date(period.ends) >= today
+    })
 
     const addOptimisticPeriod = useOptimisticArrayAdd<RegistrationPeriod>(periods, mutatePeriods)
 
@@ -42,7 +51,8 @@ const RegistrationPeriodProvider: FC<PropsWithChildren> = ({children}) => {
                     addOptimisticData: addOptimisticPeriod,
                     removeOptimisticData: removeOptimisticPeriod,
                     editOptimisticData: editOptimisticPeriod
-                }
+                },
+                currentPeriod
             }
         }}>
             {children}

@@ -42,7 +42,7 @@ const RegistrationGeneralInfoForm: FC = () => {
                 max={formatDate(new Date(), "-")}
             />
             <Select
-                id="childGradeLevel"
+                id="gradeLevel"
                 register={register}
                 isRequired
                 label="Grade Level"

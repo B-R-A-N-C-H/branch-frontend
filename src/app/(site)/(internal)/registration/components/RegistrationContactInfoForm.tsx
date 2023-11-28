@@ -37,6 +37,26 @@ const RegistrationContactInfoForm: FC = () => {
                     isClearable
                 />
             </div>
+            <Input
+                id="emergencyContactNumber"
+                type="tel"
+                pattern={"876-[0-9]{3}-[0-9]{4}"}
+                register={register}
+                label="Emergency Contact"
+                aria-label="Street"
+                isRequired
+                isClearable
+            />
+            <Input
+                id="secondaryEmergencyContactNumber"
+                type="tel"
+                pattern={"876-[0-9]{3}-[0-9]{4}"}
+                register={register}
+                label="Secondary Emergency Contact"
+                aria-label="Street"
+                isRequired
+                isClearable
+            />
         </form>
     )
 }
