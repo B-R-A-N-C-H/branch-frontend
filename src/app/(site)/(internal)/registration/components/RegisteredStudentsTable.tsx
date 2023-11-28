@@ -8,6 +8,9 @@ import TrashIcon from "@/app/(site)/components/icons/TrashIcon";
 import CircledCheckIcon from "@/app/(site)/components/icons/CircledCheckIcon";
 import CircledXIcon from "@/app/(site)/components/icons/CircledXIcon";
 import PendingIcon from "@/app/(site)/components/icons/PendingIcon";
+import entry from "next/dist/server/typescript/rules/entry";
+import DeleteRegistrationEntryButton
+    from "@/app/(site)/(internal)/registration/components/DeleteRegistrationEntryButton";
 
 type Props = {
     entries: RegistrationEntry[],
@@ -72,14 +75,8 @@ const RegisteredStudentsTable: FC<Props> = ({entries, actionContent = []}) => {
             case "actions": {
                 return (
                     <div className="flex gap-2">
-                        <Button
-                            variant="flat"
-                            color="danger"
-                            isIconOnly
-                        >
-                            <TrashIcon/>
-                        </Button>
-
+                        {actionContent}
+                        {item.approved === null && <DeleteRegistrationEntryButton entry={item} />}
                     </div>
                 )
             }
