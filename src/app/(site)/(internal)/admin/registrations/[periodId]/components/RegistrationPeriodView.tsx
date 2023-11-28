@@ -5,7 +5,7 @@ import useProtectedRoute from "@/app/(site)/(internal)/admin/hooks/useProtectedR
 import {Role} from "@/app/utils/types/models/member";
 import {$fetch, useAuthorizedSWR} from "@/app/utils/swr-utils";
 import {RegistrationEntry, RegistrationPeriod} from "@/app/utils/types/models/registration";
-import {Button, Card, CardBody, CardHeader, Divider, Spacer, Spinner} from "@nextui-org/react";
+import {Button, Card, CardBody, CardHeader, Spacer, Spinner} from "@nextui-org/react";
 import {useRouter} from "next/navigation";
 import Title from "@/app/(site)/components/Title";
 import {useRegistrationEntries} from "@/app/(site)/(internal)/registration/components/RegistrationEntriesProvider";
@@ -14,6 +14,9 @@ import Link from "next/link";
 import {ArrowLeftIcon} from "@nextui-org/shared-icons";
 import ReviewRegistrationButton
     from "@/app/(site)/(internal)/admin/registrations/[periodId]/components/ReviewRegistrationButton";
+import EditRegistrationPeriodButton
+    from "@/app/(site)/(internal)/admin/registrations/[periodId]/components/EditRegistrationPeriodButton";
+import {useSession} from "next-auth/react";
 
 type Props = {
     periodId: string
@@ -25,7 +28,8 @@ const FetchRegistrationPeriod = (periodId: string) =>
 const RegistrationPeriodView: FC<Props> = ({periodId}) => {
     useProtectedRoute(Role.HEAD_TEACHER, Role.PRINCIPAL, Role.ADMIN)
     const router = useRouter()
-    const {data: period, isLoading: periodLoading} = FetchRegistrationPeriod(periodId)
+    const {data: session} = useSession()
+    const {data: period, isLoading: periodLoading, mutate} = FetchRegistrationPeriod(periodId)
     const {entries: {data: entryArr}} = useRegistrationEntries()
     const relevantEntries = useMemo(() => entryArr.filter(entry => entry.registrationPeriodId === periodId), [entryArr, periodId])
 
@@ -51,14 +55,24 @@ const RegistrationPeriodView: FC<Props> = ({periodId}) => {
                     <Card className="w-full px-6 py-2 font-semibold">
                         <CardHeader>
                             <Title className="text-5xl">{period?.name}</Title>
+                            {([Role.ADMIN, Role.PRINCIPAL] as Role[]).includes(session!.user.role!) && (
+                                <Fragment>
+                                    <Spacer x={4}/>
+                                    <EditRegistrationPeriodButton period={period!} mutatePeriod={mutate}/>
+                                </Fragment>
+                            )}
                         </CardHeader>
-                        <CardBody className="block text-left">
-                            <p className="text-sm text-secondary">Opens: {new Date(period!.starts).toLocaleString("en-JM", {
-                                dateStyle: "medium"
-                            })}</p>
-                            <p className="text-sm text-secondary">Ends: {new Date(period!.ends).toLocaleString("en-JM", {
-                                dateStyle: "medium"
-                            })}</p>
+                        <CardBody className="block text-left border border-primary w-fit rounded-2xl px-6">
+                            <div className="flex gap-2">
+                                <div>
+                                    <p className="text-sm text-secondary">Opens: {new Date(period!.starts).toLocaleString("en-JM", {
+                                        dateStyle: "medium"
+                                    })}</p>
+                                    <p className="text-sm text-secondary">Ends: {new Date(period!.ends).toLocaleString("en-JM", {
+                                        dateStyle: "medium"
+                                    })}</p>
+                                </div>
+                            </div>
                         </CardBody>
                     </Card>
                     <Spacer y={12}/>
