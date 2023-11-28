@@ -10,8 +10,10 @@ import {useRegistrationEntries} from "@/app/(site)/(internal)/registration/compo
 import {
     useRegistrationPeriods
 } from "@/app/(site)/(internal)/admin/registrations/components/periods/RegistrationPeriodProvider";
+import {useSession} from "next-auth/react";
 
 const RegistrationContainer: FC = () => {
+    const {data: session} = useSession()
     const {periods: {currentPeriod}} = useRegistrationPeriods()
     const {entries: {data: entryArr}} = useRegistrationEntries()
     const [modalOpen, setModalOpen] = useState(false)
@@ -33,7 +35,7 @@ const RegistrationContainer: FC = () => {
             <Spacer y={12}/>
             <Title className="font-semibold">Your Registrations</Title>
             <Spacer y={4}/>
-            <RegistrationEntriesTable entries={entryArr}/>
+            <RegistrationEntriesTable entries={entryArr.filter(entry => entry.memberId === session?.user.id)}/>
         </div>
     )
 }

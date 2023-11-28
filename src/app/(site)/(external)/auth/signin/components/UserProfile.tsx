@@ -58,26 +58,25 @@ const UserProfile: FC = () => {
                 </DropdownSection>
                 <DropdownSection showDivider>
                     <DropdownItem
-                        key="register"
+                        as={Link}
+                        href="/registration" key="register"
                         color="secondary"
                         isReadOnly
                         startContent={<GraduationCapIcon/>}
                     >
-                        <Link href="/registration">
-                            Registration
-                        </Link>
+                        Registration
                     </DropdownItem>
                     {
-                        memberHasRole(member, Role.PRINCIPAL) ? (
+                        memberHasRole(member, Role.HEAD_TEACHER) ? (
                                 <DropdownItem
+                                    as={Link}
+                                    href="/admin/registrations"
                                     key="manage_registrations"
                                     color="secondary"
                                     isReadOnly
                                     startContent={<CheckListIcon width={20}/>}
                                 >
-                                    <Link href="/admin/registrations">
-                                        Manage Registrations
-                                    </Link>
+                                    Manage Registrations
                                 </DropdownItem>
                             )
                             : <DropdownItem className="hidden"></DropdownItem>
@@ -85,14 +84,13 @@ const UserProfile: FC = () => {
                     {
                         memberHasRole(member, Role.TEACHER) ? (
                                 <DropdownItem
-                                    key="manage_registrations"
+                                    as={Link}
+                                    href="/" key="manage_announcements"
                                     color="secondary"
                                     isReadOnly
                                     startContent={<ChatBubbleIcon width={20}/>}
                                 >
-                                    <Link href="/">
-                                        Manage Announcements
-                                    </Link>
+                                    Manage Announcements
                                 </DropdownItem>
                             )
                             : <DropdownItem className="hidden"></DropdownItem>
@@ -100,14 +98,14 @@ const UserProfile: FC = () => {
                     {
                         memberHasRole(member, Role.HEAD_TEACHER) ? (
                                 <DropdownItem
-                                    key="manage_registrations"
+                                    as={Link}
+                                    href="/"
+                                    key="manage_events"
                                     color="secondary"
                                     isReadOnly
                                     startContent={<CalendarStrokeIcon width={20}/>}
                                 >
-                                    <Link href="/">
-                                        Manage Events
-                                    </Link>
+                                    Manage Events
                                 </DropdownItem>
                             )
                             : <DropdownItem className="hidden"></DropdownItem>
@@ -115,14 +113,14 @@ const UserProfile: FC = () => {
                     {
                         memberHasRole(member, Role.PRINCIPAL) ? (
                                 <DropdownItem
+                                    as={Link}
+                                    href="/admin/users"
                                     key="manage_registrations"
                                     color="secondary"
                                     isReadOnly
                                     startContent={<UserIcon width={20}/>}
                                 >
-                                    <Link href="/admin/users">
-                                        Manage Users
-                                    </Link>
+                                    Manage Users
                                 </DropdownItem>
                             )
                             : <DropdownItem className="hidden"></DropdownItem>

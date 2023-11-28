@@ -13,6 +13,8 @@ import toast from "react-hot-toast";
 import {
     useRegistrationDocuments
 } from "@/app/(site)/(internal)/admin/registrations/components/documents/RegistrationDocumentProvider";
+import {useSession} from "next-auth/react";
+import {Role} from "@/app/utils/types/models/member";
 
 type Props = {
     document: RegistrationDocument,
@@ -24,6 +26,7 @@ const DeleteDocument = (documentId: string) =>
     useAuthorizedSWRMutationWithoutArgs<RegistrationDocument>(`/registration/documents/${documentId}`, $delete<RegistrationDocument>)
 
 const RegistrationDocumentModal: FC<Props> = ({isOpen, onClose, document}) => {
+    const {data: session} = useSession()
     const {documents: {optimisticData: {removeOptimisticData: removeOptimisticDocument}}} = useRegistrationDocuments()
     const {trigger: deleteDocument, isMutating: isDeleting} = DeleteDocument(document.id)
     const [deleteModalOpen, setDeleteModalOpen] = useState(false)
@@ -66,17 +69,21 @@ const RegistrationDocumentModal: FC<Props> = ({isOpen, onClose, document}) => {
                         <p className="text-sm text-subtext">Media Type: {document.mimeType}</p>
                     </div>
                 </div>
-                <Divider className="my-6"/>
-                <div className="flex justify-end gap-4">
-                    <Button
-                        color="danger"
-                        variant="shadow"
-                        startContent={<TrashIcon/>}
-                        onPress={() => setDeleteModalOpen(true)}
-                    >
-                        Delete Document
-                    </Button>
-                </div>
+                {([Role.ADMIN, Role.PRINCIPAL] as Role[]).includes(session!.user.role!) && (
+                    <Fragment>
+                        <Divider className="my-6"/>
+                        <div className="flex justify-end gap-4">
+                            <Button
+                                color="danger"
+                                variant="shadow"
+                                startContent={<TrashIcon/>}
+                                onPress={() => setDeleteModalOpen(true)}
+                            >
+                                Delete Document
+                            </Button>
+                        </div>
+                    </Fragment>
+                )}
             </Modal>
         </Fragment>
     )
