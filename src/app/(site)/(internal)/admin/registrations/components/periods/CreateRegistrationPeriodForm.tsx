@@ -2,7 +2,7 @@
 
 import {FC, useCallback, useMemo, useState} from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
-import {CreateRegistrationPeriodDto} from "@/app/utils/types/dto/registration";
+import {CreateRegistrationPeriodDto} from "@/app/utils/types/dto/registration.dto";
 import Input from "@/app/(site)/components/inputs/Input";
 import {$post, useAuthorizedSWRMutation} from "@/app/utils/swr-utils";
 import {RegistrationPeriod} from "@/app/utils/types/models/registration";

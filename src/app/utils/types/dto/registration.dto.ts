@@ -18,3 +18,6 @@ export type CreateRegistrationPeriodDto = {
 
 export type UpdateRegistrationPeriodDto = Partial<CreateRegistrationPeriodDto>
 
+export type ReviewRegistrationDto = {
+    approved: boolean,
+}

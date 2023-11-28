@@ -3,7 +3,7 @@
 import {FC, useState} from "react";
 import {Button, Spacer} from "@nextui-org/react";
 import GraduationCapIcon from "@/app/(site)/components/icons/GraduationCapIcon";
-import RegisteredStudentsTable from "@/app/(site)/(internal)/registration/components/RegisteredStudentsTable";
+import RegistrationEntriesTable from "@/app/(site)/(internal)/registration/components/RegistrationEntriesTable";
 import Title from "@/app/(site)/components/Title";
 import RegistrationModal from "@/app/(site)/(internal)/registration/components/RegistrationModal";
 import {useRegistrationEntries} from "@/app/(site)/(internal)/registration/components/RegistrationEntriesProvider";
@@ -33,7 +33,7 @@ const RegistrationContainer: FC = () => {
             <Spacer y={12}/>
             <Title className="font-semibold">Your Registrations</Title>
             <Spacer y={4}/>
-            <RegisteredStudentsTable entries={entryArr}/>
+            <RegistrationEntriesTable entries={entryArr}/>
         </div>
     )
 }

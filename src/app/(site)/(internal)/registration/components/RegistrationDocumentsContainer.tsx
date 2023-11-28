@@ -23,7 +23,7 @@ const RegistrationDocumentsContainer: FC = () => {
                 registration.</Title>
             <Divider className="my-6"/>
             <div
-                className="border border-primary rounded-2xl p-6 grid grid-cols-3 tablet:grid-cols-2 phone:grid-cols-1">
+                className="border border-primary rounded-2xl p-6 grid grid-cols-3 tablet:grid-cols-2 phone:grid-cols-1 gap-4">
                 {cards.length ? cards :
                     <Title className="text-medium col-span-3">No documents have been uploaded...</Title>}
             </div>

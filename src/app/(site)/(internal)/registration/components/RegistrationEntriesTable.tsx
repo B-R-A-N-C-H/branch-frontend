@@ -14,10 +14,10 @@ import DeleteRegistrationEntryButton
 
 type Props = {
     entries: RegistrationEntry[],
-    actionContent?: ReactElement[] | ReactElement
+    actionContent?: (entry: RegistrationEntry) => (ReactElement[] | ReactElement)
 }
 
-const RegisteredStudentsTable: FC<Props> = ({entries, actionContent = []}) => {
+const RegistrationEntriesTable: FC<Props> = ({entries, actionContent}) => {
     const columns = useMemo<Column[]>(() => ([
         {
             key: "student_name",
@@ -75,18 +75,19 @@ const RegisteredStudentsTable: FC<Props> = ({entries, actionContent = []}) => {
             case "actions": {
                 return (
                     <div className="flex gap-2">
-                        {actionContent}
-                        {item.approved === null && <DeleteRegistrationEntryButton entry={item} />}
+                        {actionContent && actionContent(item)}
+                        {item.approved === null && <DeleteRegistrationEntryButton entry={item}/>}
                     </div>
                 )
             }
         }
-    }, [])
+    }, [actionContent])
 
     return (
         <Table
             columns={columns}
             items={entries}
+            emptyContent="There are no entries"
         >
             {(entry) => (
                 <TableRow key={entry.id}>
@@ -99,4 +100,4 @@ const RegisteredStudentsTable: FC<Props> = ({entries, actionContent = []}) => {
     )
 }
 
-export default RegisteredStudentsTable
+export default RegistrationEntriesTable
