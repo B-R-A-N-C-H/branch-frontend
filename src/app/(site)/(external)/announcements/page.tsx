@@ -1,10 +1,28 @@
-import {FC} from "react";
+"use client"
+
+import {FC, Fragment} from "react";
+import Title from "@/app/(site)/components/Title";
+import AnnouncementsView from "@/app/(site)/(internal)/admin/announcements/components/view/AnnouncementsView";
+import {useSession} from "next-auth/react";
+import {Role} from "@/app/utils/types/models/member";
+import {Spacer} from "@nextui-org/react";
+import CreateAnnouncementButton from "@/app/(site)/(internal)/admin/announcements/components/CreateAnnouncementButton";
 
 const AnnouncementsPage: FC = () => {
-    return (
-        <main className="p-16 phone:px-6">
+    const {data: session} = useSession()
 
-        </main>
+    return (
+        <Fragment>
+            <Title className="text-5xl">Announcements</Title>
+            {(session && session.user.role !== null && ([Role.ADMIN, Role.PRINCIPAL, Role.HEAD_TEACHER, Role.TEACHER] as Role[]).includes(session.user.role)) && (
+                <Fragment>
+                    <Spacer y={12}/>
+                    <CreateAnnouncementButton/>
+                </Fragment>
+            )}
+            <Spacer y={12}/>
+            <AnnouncementsView/>
+        </Fragment>
     )
 }
 

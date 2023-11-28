@@ -18,7 +18,7 @@ import toast from "react-hot-toast";
 const CreateAnnouncement = () =>
     useAuthorizedSWRMutation<CreateAnnouncementDto, Announcement>(
         '/communication/announcements',
-        $post<CreateAnnouncementDto, Announcement>
+        $post
     )
 
 type FormProps = {

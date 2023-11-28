@@ -11,6 +11,7 @@ export type Announcement = {
     id: string,
     level: AnnouncementLevel,
     content: string,
+    title: string,
     commentsEnabled: boolean,
     comments?: AnnouncementComment[],
     announcerId: string,

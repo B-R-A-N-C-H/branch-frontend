@@ -52,7 +52,7 @@ const NavBar: FC = () => {
                     </Link>
                 </NavbarItem>
                 <NavbarItem>
-                    <Link href="/">
+                    <Link href="/announcements">
                         ANNOUNCEMENTS
                     </Link>
                 </NavbarItem>
@@ -101,7 +101,7 @@ const NavBar: FC = () => {
                     </Link>
                 </NavbarMenuItem>
                 <NavbarMenuItem>
-                    <Link href="/">
+                    <Link href="/announcements">
                         ANNOUNCEMENTS
                     </Link>
                 </NavbarMenuItem>

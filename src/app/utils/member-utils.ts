@@ -1,4 +1,5 @@
 import Member, {Role} from "@/app/utils/types/models/member";
+import {Session, User} from "next-auth";
 
 /**
  * This function checks if a member has permission to access the permissions of a specific role.
@@ -18,4 +19,14 @@ export const memberHasRole = (member?: Member, role: Role = Role.TEACHER): boole
     if (member.role === Role.HEAD_TEACHER && role === Role.TEACHER)
         return true;
     return member.role === role
+}
+
+export const userHasRole = (session?: Session | null, role: Role = Role.TEACHER): boolean => {
+    if (!session)
+        return false
+    if (session.user.role === Role.ADMIN || session.user.role === Role.PRINCIPAL)
+        return true;
+    if (session.user.role === Role.HEAD_TEACHER && role === Role.TEACHER)
+        return true;
+    return session.user.role === role
 }

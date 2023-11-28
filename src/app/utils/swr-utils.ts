@@ -20,7 +20,7 @@ export const useAuthorizedSWR = <R>(url: string, cb: (token?: string) => (url: s
     return useSWR(session && url, cb(session?.backendTokens.accessToken))
 }
 
-export const useAuthorizedSWRMutation = <A, R>(url: string, cb: (token?: string, config?: AxiosRequestConfig) => (url: string, args: MutatorArgs<A>) => Promise<R | undefined>, config?: AxiosRequestConfig) => {
+export const useAuthorizedSWRMutation = <A, R>(url: string | undefined = undefined, cb: (token?: string, config?: AxiosRequestConfig) => (url: string, args: MutatorArgs<A>) => Promise<R | undefined>, config?: AxiosRequestConfig) => {
     const {data: session} = useSession()
     return useSWRMutation(session && url, cb(session?.backendTokens.accessToken, config))
 }

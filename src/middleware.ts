@@ -9,6 +9,8 @@ export default withAuth({
 export const config = {
     matcher: [
         "/registration/:path*",
+        "/announcements/:path*",
+        "/events/:path*",
         "/admin/:path*",
     ]
 };
