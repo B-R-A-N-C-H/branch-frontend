@@ -46,6 +46,7 @@ const AddRegistrationDocumentButton: FC = () => {
                     if (addOptimisticDocument)
                         await addOptimisticDocument(upload, {
                             id: "",
+                            mimeType: file.type,
                             name: file.name,
                             createdAt: new Date().toString(),
                             updatedAt: new Date().toString()
