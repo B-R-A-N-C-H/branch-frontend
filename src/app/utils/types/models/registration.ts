@@ -42,6 +42,7 @@ export type RegistrationEntry = {
 export type RegistrationDocument = {
     id: string,
     name: string,
+    mimeType: string,
 
     createdAt: string,
     updatedAt: string,

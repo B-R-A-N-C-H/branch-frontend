@@ -28,7 +28,7 @@ export type DataContextState<T, O> = {
 export type OptimisticWorker<T> = (work: () => Promise<T | undefined | null>, data: T, options?: Omit<MutatorOptions, 'optimisticData'>) => Promise<void>
 
 export const useOptimisticArrayAdd = <T>(currentArray: T[] | undefined, mutateArray: KeyedMutator<T[] | undefined>, options?: Omit<MutatorOptions, 'optimisticData'>) =>
-    useCallback<OptimisticWorker<T>>(async (work, optimisticData) => {
+    useCallback<OptimisticWorker<T>>(async (work, optimisticData, funcOpts) => {
         if (!currentArray)
             return
         const mutate = mutateArray
@@ -43,12 +43,13 @@ export const useOptimisticArrayAdd = <T>(currentArray: T[] | undefined, mutateAr
             optimisticData: [...currentArray, optimisticData],
             rollbackOnError: true,
             revalidate: false,
-            ...options
+            ...options,
+            ...funcOpts
         })
     }, [currentArray, mutateArray, options])
 
 export const useOptimisticArrayRemove = <T>(currentArray: T[] | undefined, mutateArray: KeyedMutator<T[] | undefined>, removeLogic: (arr: T[], removedData: T) => T[], options?: Omit<MutatorOptions, 'optimisticData'>) =>
-    useCallback<OptimisticWorker<T>>(async (work, optimisticData) => {
+    useCallback<OptimisticWorker<T>>(async (work, optimisticData, ...funcOpts) => {
         if (!currentArray)
             return
         const mutate = mutateArray
@@ -63,12 +64,13 @@ export const useOptimisticArrayRemove = <T>(currentArray: T[] | undefined, mutat
             optimisticData: removeLogic(currentArray, optimisticData),
             rollbackOnError: true,
             revalidate: false,
-            ...options
+            ...options,
+            ...funcOpts
         })
     }, [currentArray, mutateArray, options, removeLogic])
 
 export const useOptimisticArrayEdit = <T>(currentArray: T[] | undefined, mutateArray: KeyedMutator<T[] | undefined>, removeLogic: (arr: T[], removedData: T) => T[], options?: Omit<MutatorOptions, 'optimisticData'>) =>
-    useCallback<OptimisticWorker<T>>(async (work, optimisticData) => {
+    useCallback<OptimisticWorker<T>>(async (work, optimisticData, funcOpts) => {
         if (!currentArray)
             return
 
@@ -91,7 +93,8 @@ export const useOptimisticArrayEdit = <T>(currentArray: T[] | undefined, mutateA
             optimisticData: doUpdate(optimisticData),
             rollbackOnError: true,
             revalidate: false,
-            ...options
+            ...options,
+            ...funcOpts
         })
     }, [currentArray, mutateArray, options, removeLogic])
 

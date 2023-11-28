@@ -2,11 +2,11 @@ import {
     createDataContext,
     DataContextProps,
     DataContextState,
-    OptimisticWorker
+    useOptimisticArrayAdd, useOptimisticArrayEdit, useOptimisticArrayRemove
 } from "@/app/utils/client/context-utils";
-import {FC, PropsWithChildren, useCallback} from "react";
+import {FC, PropsWithChildren} from "react";
 import {RegistrationPeriod} from "@/app/utils/types/models/registration";
-import useSWR, {KeyedMutator} from "swr";
+import {KeyedMutator} from "swr";
 import {$fetch, useAuthorizedSWR} from "@/app/utils/swr-utils";
 
 interface Context extends DataContextProps {
@@ -22,69 +22,15 @@ const RegistrationPeriodProvider: FC<PropsWithChildren> = ({children}) => {
         mutate: mutatePeriods
     } = useAuthorizedSWR('/registration/periods', $fetch<RegistrationPeriod[]>)
 
-    const addOptimisticPeriod = useCallback<OptimisticWorker<RegistrationPeriod>>(async (work, optimisticEntry, options) => {
-        if (!periods)
-            return
-        const mutate = mutatePeriods
-        const doWork = async (): Promise<RegistrationPeriod[]> => {
-            const period = await work()
-            if (!period)
-                return periods
-            return [...periods, period]
-        }
+    const addOptimisticPeriod = useOptimisticArrayAdd<RegistrationPeriod>(periods, mutatePeriods)
 
-        await mutate(doWork, {
-            optimisticData: [...periods, optimisticEntry],
-            rollbackOnError: true,
-            revalidate: false,
-            ...options
-        })
-    }, [periods, mutatePeriods])
+    const removeOptimisticPeriod = useOptimisticArrayRemove(periods, mutatePeriods,
+        (arr, removed) => arr.filter(entry => entry.id !== removed.id)
+    )
 
-    const removeOptimisticPeriod = useCallback<OptimisticWorker<RegistrationPeriod>>(async (work, removedOptimisticDream) => {
-        if (!periods)
-            return
-        const mutate = mutatePeriods
-        const doWork = async (): Promise<RegistrationPeriod[]> => {
-            const removedDream = await work()
-            if (!removedDream)
-                return periods
-            return periods.filter(entry => entry.id !== removedDream.id)
-        }
-
-        await mutate(doWork, {
-            optimisticData: periods.filter(entry => entry.id !== removedOptimisticDream.id),
-            rollbackOnError: true,
-            revalidate: false,
-        })
-    }, [periods, mutatePeriods])
-
-    const editOptimisticPeriod = useCallback<OptimisticWorker<RegistrationPeriod>>(async (work, editedOptimisticDream, options) => {
-        if (!periods)
-            return
-
-        const mutate = mutatePeriods
-
-        const doUpdate = (editedDream: RegistrationPeriod): RegistrationPeriod[] => {
-            const newArr = periods.filter(dream => dream.id !== editedDream.id)
-            newArr.push(editedDream)
-            return newArr
-        }
-
-        const doWork = async (): Promise<RegistrationPeriod[]> => {
-            const updatedDream = await work()
-            if (!updatedDream)
-                return periods
-            return doUpdate(updatedDream)
-        }
-
-        await mutate(doWork, {
-            optimisticData: doUpdate(editedOptimisticDream),
-            rollbackOnError: true,
-            revalidate: false,
-            ...options
-        })
-    }, [periods, mutatePeriods])
+    const editOptimisticPeriod = useOptimisticArrayEdit(periods, mutatePeriods,
+        (arr, removed) => arr.filter(entry => entry.id !== removed.id)
+    )
 
     return (
         <Context.Provider value={{

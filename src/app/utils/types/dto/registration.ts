@@ -17,3 +17,4 @@ export type CreateRegistrationPeriodDto = {
 }
 
 export type UpdateRegistrationPeriodDto = Partial<CreateRegistrationPeriodDto>
+

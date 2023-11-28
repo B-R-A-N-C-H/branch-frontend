@@ -1,7 +1,7 @@
 "use client"
 
 import {api} from "@/app/utils/api/api-utils";
-import {AxiosError} from "axios";
+import {AxiosError, AxiosRequestConfig} from "axios";
 import toast from "react-hot-toast";
 import {NestResponse} from "@/app/utils/types/nest";
 import useSWR, {SWRHook} from "swr";
@@ -20,9 +20,9 @@ export const useAuthorizedSWR = <R>(url: string, cb: (token?: string) => (url: s
     return useSWR(session && url, cb(session?.backendTokens.accessToken))
 }
 
-export const useAuthorizedSWRMutation = <A, R>(url: string, cb: (token?: string) => (url: string, args: MutatorArgs<A>) => Promise<R | undefined>) => {
+export const useAuthorizedSWRMutation = <A, R>(url: string, cb: (token?: string, config?: AxiosRequestConfig) => (url: string, args: MutatorArgs<A>) => Promise<R | undefined>, config?: AxiosRequestConfig) => {
     const {data: session} = useSession()
-    return useSWRMutation(session && url, cb(session?.backendTokens.accessToken))
+    return useSWRMutation(session && url, cb(session?.backendTokens.accessToken, config))
 }
 
 export const useAuthorizedSWRMutationWithoutArgs = <R>(url: string, cb: (token?: string) => (url: string) => Promise<R | undefined>) => {
@@ -58,10 +58,22 @@ export const $fetchWithArgs = <A extends Record<string, string>, R>(token?: stri
     } else return $fetch<R>(token)(url)
 }
 
-export const $post = <B, R>(token?: string) => (url: string, {arg}: MutatorArgs<B>) => api.post<NestResponse<R>>(url, arg.body, token ? {
+export const $post = <B, R>(token?: string, config?: AxiosRequestConfig) => (url: string, {arg}: MutatorArgs<B>) => api.post<NestResponse<R>>(url, arg.body, token || config ? {
+    ...config,
     headers: {
-        authorization: getBearerString(token)
-    }
+        authorization: token && getBearerString(token),
+        ...config?.headers
+    },
+} : undefined)
+    .then(res => res.data as R)
+    .catch(handleAxiosError)
+
+export const $put = <B, R>(token?: string, config?: AxiosRequestConfig) => (url: string, {arg}: MutatorArgs<B>) => api.put<NestResponse<R>>(url, arg.body, token || config ? {
+    ...config,
+    headers: {
+        authorization: token && getBearerString(token),
+        ...config?.headers
+    },
 } : undefined)
     .then(res => res.data as R)
     .catch(handleAxiosError)

@@ -61,7 +61,7 @@ const RegisterForm: FC = () => {
             <div className="flex phone:flex-col gap-6">
                 <Input
                     id="firstName"
-                    label="Last Name"
+                    label="First Name"
                     register={register}
                     isRequired
                     isClearable
@@ -69,7 +69,7 @@ const RegisterForm: FC = () => {
                 />
                 <Input
                     id="lastName"
-                    label="First Name"
+                    label="Last Name"
                     register={register}
                     isRequired
                     isClearable
