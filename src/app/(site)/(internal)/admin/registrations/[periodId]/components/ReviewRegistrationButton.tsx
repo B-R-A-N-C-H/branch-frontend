@@ -1,7 +1,7 @@
 "use client"
 
 import {FC, Fragment, useState} from "react";
-import {Button} from "@nextui-org/react";
+import {Button, Tooltip} from "@nextui-org/react";
 import {EditIcon} from "@nextui-org/shared-icons";
 import {RegistrationEntry} from "@/app/utils/types/models/registration";
 import ReviewRegistrationModal
@@ -21,14 +21,22 @@ const ReviewRegistrationButton: FC<Props> = ({entry}) => {
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}
             />
-            <Button
-                isIconOnly
+            <Tooltip
+                closeDelay={100}
                 color="secondary"
-                variant="flat"
-                onPress={() => setModalOpen(true)}
+                shadow="md"
+                showArrow
+                content="Review Entry"
             >
-                <EditIcon/>
-            </Button>
+                <Button
+                    isIconOnly
+                    color="secondary"
+                    variant="flat"
+                    onPress={() => setModalOpen(true)}
+                >
+                    <EditIcon/>
+                </Button>
+            </Tooltip>
         </Fragment>
     )
 }

@@ -7,7 +7,7 @@ import {$delete, useAuthorizedSWRMutation, useAuthorizedSWRMutationWithoutArgs} 
 import {useRegistrationEntries} from "@/app/(site)/(internal)/registration/components/RegistrationEntriesProvider";
 import toast from "react-hot-toast";
 import TrashIcon from "@/app/(site)/components/icons/TrashIcon";
-import {Button} from "@nextui-org/react";
+import {Button, Tooltip} from "@nextui-org/react";
 
 type Props = {
     entry: RegistrationEntry
@@ -43,14 +43,22 @@ const DeleteRegistrationEntryButton: FC<Props> = ({entry}) => {
             >
                 Are you sure you want to delete the registration entry for {entry.childFirstName} {entry.childLastName}?
             </ConfirmationModal>
-            <Button
-                variant="flat"
+            <Tooltip
+                closeDelay={100}
                 color="danger"
-                onPress={() => setDeleteModalOpen(true)}
-                isIconOnly
+                shadow="md"
+                showArrow
+                content="Delete Entry"
             >
-                <TrashIcon/>
-            </Button>
+                <Button
+                    variant="flat"
+                    color="danger"
+                    onPress={() => setDeleteModalOpen(true)}
+                    isIconOnly
+                >
+                    <TrashIcon/>
+                </Button>
+            </Tooltip>
         </Fragment>
     )
 }
