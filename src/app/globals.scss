@@ -26,11 +26,15 @@ $transition-fastest: 75ms;
 }
 
 .rbc-today {
-  background-color: #00947150 !important;
+  background-color: #005d4920 !important;
 }
 
 .rbc-time-header {
   width: 100%;
+}
+
+.rbc-header.rbc-today {
+  color: #005d49;
 }
 
 .rbc-time-content {
