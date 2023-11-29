@@ -9,12 +9,6 @@ $transition-fast: 300ms;
 $transition-faster: 100ms;
 $transition-fastest: 75ms;
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 .transition-slow {
   transition: all ease-in-out $transition-slow;
 }

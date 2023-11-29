@@ -4,7 +4,8 @@ export type CreateAnnouncementDto = {
     title: string,
     content: string,
     announcerId: string,
-    level?: AnnouncementLevel
+    level?: AnnouncementLevel,
+    commentsEnabled?: boolean,
 }
 
 export type UpdateAnnouncementDto = Partial<Omit<CreateAnnouncementDto, 'announcerId'>>

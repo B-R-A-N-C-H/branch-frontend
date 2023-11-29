@@ -4,7 +4,7 @@ import {api} from "@/app/utils/api/api-utils";
 import {AxiosError, AxiosRequestConfig} from "axios";
 import toast from "react-hot-toast";
 import {NestResponse} from "@/app/utils/types/nest";
-import useSWR, {SWRHook} from "swr";
+import useSWR from "swr";
 import {useSession} from "next-auth/react";
 import useSWRMutation from "swr/mutation";
 
@@ -15,9 +15,9 @@ export type MutatorArgs<T> = {
     }
 }
 
-export const useAuthorizedSWR = <R>(url: string, cb: (token?: string) => (url: string) => Promise<R | undefined>) => {
+export const useAuthorizedSWR = <R>(url: string, cb: (token?: string, suppressErrorToast?: boolean) => (url: string) => Promise<R | undefined>, suppressErrorToast: boolean = false) => {
     const {data: session} = useSession()
-    return useSWR(session && url, cb(session?.backendTokens.accessToken))
+    return useSWR(session && url, cb(session?.backendTokens.accessToken, suppressErrorToast))
 }
 
 export const useAuthorizedSWRMutation = <A, R>(url: string | undefined = undefined, cb: (token?: string, config?: AxiosRequestConfig) => (url: string, args: MutatorArgs<A>) => Promise<R | undefined>, config?: AxiosRequestConfig) => {
@@ -31,14 +31,18 @@ export const useAuthorizedSWRMutationWithoutArgs = <R>(url: string, cb: (token?:
 }
 
 
-export const $get = <R>(token?: string) =>
+export const $get = <R>(token?: string, suppressErrorToast: boolean = false) =>
     (url: string) => api.get<NestResponse<R>>(url, token ? {
         headers: {
             authorization: getBearerString(token)
         }
     } : undefined)
         .then(res => res.data as R)
-        .catch(handleAxiosError)
+        .catch(e => {
+            if (!suppressErrorToast)
+                return handleAxiosError(e)
+            else console.error(e)
+        })
 
 export const $getWithArgs = <A extends Record<string, string>, R>(token?: string) => async (url: string, args?: MutatorArgs<A>): Promise<R | undefined> => {
     if (args) {

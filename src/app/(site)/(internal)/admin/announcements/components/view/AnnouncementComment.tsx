@@ -29,7 +29,7 @@ const AnnouncementComment: FC<Props> = ({announcement, comment, mutateAnnounceme
 
     return (
         <div
-            className="flex gap-4"
+            className="relative flex gap-4"
             onMouseEnter={() => setDeleteButtonVisible(true)}
             onMouseLeave={() => setDeleteButtonVisible(false)}
         >
@@ -38,7 +38,7 @@ const AnnouncementComment: FC<Props> = ({announcement, comment, mutateAnnounceme
                 color="secondary"
                 className="flex-shrink-0"
             />
-            <div className="flex-shrink-0">
+            <div className="flex-shrink-0 max-w-5xl tablet:max-w-[80%]">
                 <p className="capitalize font-semibold text-sm">
                     {comment.commenter?.firstName} {comment.commenter?.lastName}
                     <span
@@ -47,7 +47,7 @@ const AnnouncementComment: FC<Props> = ({announcement, comment, mutateAnnounceme
                         timeStyle: "short"
                     })}</span>
                 </p>
-                <p>{comment.content}</p>
+                <p className="break-words w-full">{comment.content}</p>
             </div>
             <AnimatePresence>
                 {(deleteButtonVisible && (userHasRole(session) || comment.commenterId === session?.user.id)) && (

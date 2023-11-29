@@ -5,18 +5,24 @@ import {$get, useAuthorizedSWR} from "@/app/utils/swr-utils";
 import {Announcement} from "@/app/utils/types/models/announcement";
 import {useRouter} from "next/navigation";
 import Title from "@/app/(site)/components/Title";
-import {Button, Spacer, Spinner} from "@nextui-org/react";
+import {Avatar, Button, Spacer, Spinner} from "@nextui-org/react";
 import AnnouncementCommentForm
     from "@/app/(site)/(internal)/admin/announcements/components/view/AnnouncementCommentForm";
 import {ArrowLeftIcon} from "@nextui-org/shared-icons";
 import Link from "next/link";
 import {Divider} from "@nextui-org/divider";
 import AnnouncementComment from "@/app/(site)/(internal)/admin/announcements/components/view/AnnouncementComment";
+import {useSession} from "next-auth/react";
+import {userHasRole} from "@/app/utils/member-utils";
+import {Role} from "@/app/utils/types/models/member";
+import DeleteAnnouncementButton
+    from "@/app/(site)/(internal)/admin/announcements/components/view/DeleteAnnouncementButton";
+import EditAnnouncementButton from "@/app/(site)/(internal)/admin/announcements/components/view/EditAnnouncementButton";
 
 const FetchAnnouncement = (announcementId: string) =>
     useAuthorizedSWR<Announcement>(
         `/communication/announcements/${announcementId}`,
-        $get<Announcement>
+        $get<Announcement>, true
     )
 
 type Props = {
@@ -24,7 +30,12 @@ type Props = {
 }
 
 const AnnouncementView: FC<Props> = ({announcementId}) => {
-    const {data: announcement, isLoading: announcementLoading, mutate: mutateAnnouncement} = FetchAnnouncement(announcementId)
+    const {data: session} = useSession()
+    const {
+        data: announcement,
+        isLoading: announcementLoading,
+        mutate: mutateAnnouncement
+    } = FetchAnnouncement(announcementId)
     const router = useRouter()
 
     useEffect(() => {
@@ -58,13 +69,37 @@ const AnnouncementView: FC<Props> = ({announcementId}) => {
                     </Button>
                     <Spacer y={8}/>
                     <article className="border border-primary rounded-2xl px-6 py-12 whitespace-pre-wrap">
-                        <Title className="text-5xl">{announcement.title}</Title>
+                        <div className="flex justify-between gap-4">
+                            <Title className="text-5xl phone:text-2xl py-2">{announcement.title}</Title>
+                            <div className="flex gap-2">
+                                {announcement.announcerId === session?.user.id && (
+                                    <EditAnnouncementButton
+                                        announcement={announcement}
+                                        mutateAnnouncement={mutateAnnouncement}
+                                    />
+                                )}
+                                {(announcement.announcerId === session?.user.id || userHasRole(session, Role.HEAD_TEACHER)) && (
+                                    <DeleteAnnouncementButton announcement={announcement}/>
+                                )}
+                            </div>
+                        </div>
                         <Spacer y={4}/>
-                        <h3 className="font-semibold text-secondary text-xl">Author: {announcement.announcer?.firstName} {announcement?.announcer?.lastName}</h3>
-                        <h6 className="text-xs text-subtext">{new Date(announcement!.createdAt).toLocaleString("en", {
-                            dateStyle: "full",
-                            timeStyle: "short"
-                        })}</h6>
+                        <div className="flex gap-4">
+                            <Avatar
+                                isBordered
+                                color="secondary"
+                                className="self-center"
+                                size="sm"
+                            />
+                            <div>
+                                <h3 className="font-semibold text-secondary text-xl phone:text-medium self-center">{announcement.announcer?.firstName} {announcement?.announcer?.lastName}</h3>
+                                <h6 className="text-xs text-subtext">{new Date(announcement!.createdAt).toLocaleString("en", {
+                                    dateStyle: "full",
+                                    timeStyle: "short"
+                                })}</h6>
+                            </div>
+                        </div>
+
                         <Spacer y={12}/>
                         {announcement?.content}
                         {announcement?.commentsEnabled && (
