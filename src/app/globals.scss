@@ -1,3 +1,5 @@
+@import 'react-big-calendar/lib/sass/styles';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,6 +10,58 @@ $transition-medium: 500ms;
 $transition-fast: 300ms;
 $transition-faster: 100ms;
 $transition-fastest: 75ms;
+
+.rbc-month-view,.rbc-time-view,.rbc-agenda-view {
+  border-radius: 1rem;
+  border-color: #009471 !important;
+  overflow: hidden;
+}
+
+
+.rbc-header {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+  background-color: #009471;
+  color: white;
+}
+
+.rbc-today {
+  background-color: #00947150 !important;
+}
+
+.rbc-time-header {
+  width: 100%;
+}
+
+.rbc-time-content {
+  scrollbar-width: none;
+}
+
+.rbc-time-content::-webkit-scrollbar {
+  display: none;
+}
+
+
+.rbc-btn-group > button {
+  border-color: #00ca8200 !important;
+  background-color: #009471 !important;
+  color: white !important;
+  padding: 1rem;
+}
+
+.rbc-toolbar-label {
+  font-weight: bold;
+  font-size: 1.25rem;
+  color: #009471;
+}
+
+.rbc-event {
+  background-color: #005d4990;
+  border-color: #009471;
+}
+.rbc-current-time-indicator {
+  background-color: red !important;
+}
 
 .transition-slow {
   transition: all ease-in-out $transition-slow;

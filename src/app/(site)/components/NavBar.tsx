@@ -51,16 +51,20 @@ const NavBar: FC = () => {
                         ABOUT
                     </Link>
                 </NavbarItem>
-                <NavbarItem>
-                    <Link href="/announcements">
-                        ANNOUNCEMENTS
-                    </Link>
-                </NavbarItem>
-                <NavbarItem>
-                    <Link href="/">
-                        EVENTS
-                    </Link>
-                </NavbarItem>
+                {sessionStatus === 'authenticated' && (
+                    <Fragment>
+                        <NavbarItem>
+                            <Link href="/announcements">
+                                ANNOUNCEMENTS
+                            </Link>
+                        </NavbarItem>
+                        <NavbarItem>
+                            <Link href="/events">
+                                EVENTS
+                            </Link>
+                        </NavbarItem>
+                    </Fragment>
+                )}
             </NavbarContent>
             <NavbarContent justify="end" className="laptop:hidden">
                 {
@@ -100,16 +104,20 @@ const NavBar: FC = () => {
                         ABOUT
                     </Link>
                 </NavbarMenuItem>
-                <NavbarMenuItem>
-                    <Link href="/announcements">
-                        ANNOUNCEMENTS
-                    </Link>
-                </NavbarMenuItem>
-                <NavbarMenuItem>
-                    <Link href="/">
-                        EVENTS
-                    </Link>
-                </NavbarMenuItem>
+                {sessionStatus === 'authenticated' && (
+                    <Fragment>
+                        <NavbarMenuItem>
+                            <Link href="/announcements">
+                                ANNOUNCEMENTS
+                            </Link>
+                        </NavbarMenuItem>
+                        <NavbarMenuItem>
+                            <Link href="/events">
+                                EVENTS
+                            </Link>
+                        </NavbarMenuItem>
+                    </Fragment>
+                )}
                 {
                     sessionStatus === 'unauthenticated' ? (
                         <Fragment>

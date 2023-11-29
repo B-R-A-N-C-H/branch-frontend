@@ -25,6 +25,8 @@ export type DataContextState<T, O> = {
     [T: string]: any
 }
 
+export type ArrayDataContextState<T> = DataContextState<T[], T>
+
 export type OptimisticWorker<T> = (work: () => Promise<T | undefined | null>, data: T, options?: Omit<MutatorOptions, 'optimisticData'>) => Promise<void>
 
 export const useOptimisticArrayAdd = <T>(currentArray: T[] | undefined, mutateArray: KeyedMutator<T[] | undefined>, options?: Omit<MutatorOptions, 'optimisticData'>) =>

@@ -13,6 +13,7 @@ import SignOutIcon from "@/app/(site)/components/icons/SignOutIcon";
 import CheckListIcon from "@/app/(site)/components/icons/CheckListIcon";
 import CalendarStrokeIcon from "@/app/(site)/components/icons/CalendarStrokeIcon";
 import UserIcon from "@/app/(site)/components/icons/UserIcon";
+import PeopleStrokeIcon from "@/app/(site)/components/icons/PeopleStrokeIcon";
 
 const UserProfile: FC = () => {
     const {data: member, isLoading: dataIsLoading} = useMemberData()
@@ -82,30 +83,16 @@ const UserProfile: FC = () => {
                             : <DropdownItem className="hidden"></DropdownItem>
                     }
                     {
-                        memberHasRole(member, Role.TEACHER) ? (
-                                <DropdownItem
-                                    as={Link}
-                                    href="/admin/announcements" key="manage_announcements"
-                                    color="secondary"
-                                    isReadOnly
-                                    startContent={<ChatBubbleIcon width={20}/>}
-                                >
-                                    Manage Announcements
-                                </DropdownItem>
-                            )
-                            : <DropdownItem className="hidden"></DropdownItem>
-                    }
-                    {
                         memberHasRole(member, Role.HEAD_TEACHER) ? (
                                 <DropdownItem
                                     as={Link}
-                                    href="/admin/events"
-                                    key="manage_events"
+                                    href="/admin/students"
+                                    key="manage_students"
                                     color="secondary"
                                     isReadOnly
-                                    startContent={<CalendarStrokeIcon width={20}/>}
+                                    startContent={<PeopleStrokeIcon width={20}/>}
                                 >
-                                    Manage Events
+                                    Manage Students
                                 </DropdownItem>
                             )
                             : <DropdownItem className="hidden"></DropdownItem>
