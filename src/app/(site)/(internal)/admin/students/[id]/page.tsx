@@ -14,7 +14,7 @@ type Context = RouteContext<{
 const SpecificStudentPage: FC<Context> = async ({params: {id}}) => {
     const session = await getServerSession(authOptions)
 
-    if (!userHasRole(session, Role.TEACHER))
+    if (!userHasRole(session, Role.HEAD_TEACHER))
         return redirect("/")
 
     return (

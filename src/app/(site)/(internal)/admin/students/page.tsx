@@ -14,7 +14,7 @@ const StudentManagementPage: FC = () => {
         <main className="p-16">
             <Title className="text-5xl py-2">Manage Students</Title>
             <Spacer y={12}/>
-            <StudentsTable/>
+            <StudentsTable adminView/>
         </main>
     )
 }

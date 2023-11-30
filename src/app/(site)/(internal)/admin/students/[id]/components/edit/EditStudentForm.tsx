@@ -1,105 +1,90 @@
 "use client"
 
 import {FC, useCallback, useState} from "react";
-import {RegistrationEntry} from "@/app/utils/types/models/registration";
+import {Student} from "@/app/utils/types/models/student";
 import {KeyedMutator} from "swr";
-import Title from "@/app/(site)/components/Title";
-import {Divider} from "@nextui-org/divider";
-import Input from "@/app/(site)/components/inputs/Input";
+import {$patch, useAuthorizedSWRMutation} from "@/app/utils/swr-utils";
+import {UpdateStudentDto} from "@/app/utils/types/dto/student.dto";
+import {
+    EditRegistrationFormProps,
+    gradeLevelToNum, parseGradeLevel
+} from "@/app/(site)/(internal)/registration/components/edit/EditRegistrationForm";
 import {SubmitHandler, useForm} from "react-hook-form";
-import {RegistrationFormProps} from "@/app/(site)/(internal)/registration/components/RegistrationFormProvider";
 import {formatDate, transformInputDate} from "@/app/utils/client/client-utils";
+import toast from "react-hot-toast";
+import Title from "@/app/(site)/components/Title";
+import Input from "@/app/(site)/components/inputs/Input";
 import Select from "@/app/(site)/components/inputs/Select";
 import {Button, SelectItem} from "@nextui-org/react";
+import {Divider} from "@nextui-org/divider";
 import {EditIcon} from "@nextui-org/shared-icons";
-import {$patch, useAuthorizedSWRMutation} from "@/app/utils/swr-utils";
-import {UpdateRegistrationEntryDto} from "@/app/utils/types/dto/registration.dto";
-import {useRegistrationEntries} from "@/app/(site)/(internal)/registration/components/RegistrationEntriesProvider";
-import toast from "react-hot-toast";
+import {useStudents} from "@/app/(site)/(internal)/admin/students/components/StudentsProvider";
 
 type Props = {
-    entry: RegistrationEntry,
-    onEdit?: () => void,
+    student: Student,
+    mutateStudent: KeyedMutator<Student | undefined>,
+    onEdit?: () => void
 }
 
-export type EditRegistrationFormProps = Partial<RegistrationFormProps>
+type FormProps = EditRegistrationFormProps
 
-export const parseGradeLevel = (level: number) => {
-    switch (level) {
-        case 1:
-            return "first"
-        case 2:
-            return "second"
-        case 3:
-            return "third"
-    }
-}
-
-export const gradeLevelToNum = (level: string) => {
-    switch (level) {
-        case "first":
-            return 1
-        case "second":
-            return 2
-        case "third":
-            return 3
-    }
-}
-
-const UpdateEntry = (entryId: string) =>
-    useAuthorizedSWRMutation<UpdateRegistrationEntryDto, RegistrationEntry>(
-        `/registration/entries/${entryId}`,
-        $patch<UpdateRegistrationEntryDto, RegistrationEntry>
+const EditStudent = (studentId: string) =>
+    useAuthorizedSWRMutation<UpdateStudentDto, Student>(
+        `students/${studentId}`,
+        $patch<UpdateStudentDto, Student>
     )
 
-const EditRegistrationForm: FC<Props> = ({entry, onEdit}) => {
-    const {entries: {optimisticData: {editOptimisticData: editOptimisticEntry}}} = useRegistrationEntries()
-    const {trigger: edit} = UpdateEntry(entry.id)
-    const [formState, setFormState] = useState<EditRegistrationFormProps>({})
-    const {register, handleSubmit} = useForm<EditRegistrationFormProps>()
+const EditStudentForm: FC<Props> = ({student, mutateStudent, onEdit}) => {
+    const {contents: {optimisticData: {editOptimisticData: editOptimisticStudent}}} = useStudents()
+    const {trigger: edit, isMutating: isEditing} = EditStudent(student.id)
+    const [formState, setFormState] = useState<FormProps>({})
+    const {register, handleSubmit} = useForm<FormProps>()
 
-    const onSubmit: SubmitHandler<EditRegistrationFormProps> = useCallback((data) => {
-        (Object.keys(data) as (keyof EditRegistrationFormProps)[])
+    const onSubmit: SubmitHandler<FormProps> = useCallback(async (data) => {
+        (Object.keys(data) as (keyof FormProps)[])
             .forEach(key => {
                 if (!data[key])
                     data[key] = undefined
             })
 
-        const {childDateOfBirth, gradeLevel, ...validData} = data
+        const {childDateOfBirth, gradeLevel, childFirstName, childLastName, ...validData} = data
         const validDOB = childDateOfBirth ? transformInputDate(childDateOfBirth) : undefined
         const validGradeLevel = gradeLevel ? gradeLevelToNum(gradeLevel) : undefined
+
+        const optimisticData: Student = {
+            ...student,
+            firstName: childFirstName ?? student.firstName,
+            lastName: childLastName ?? student.lastName,
+            childDateOfBirth: validDOB?.toString() ?? student.childDateOfBirth,
+            gradeLevel: validGradeLevel ?? student.gradeLevel,
+            streetName: validData.streetName ?? student.streetName,
+            city: validData.city ?? student.city,
+            parish: validData.parish ?? student.parish,
+            secondaryEmergencyContactNumber: validData.secondaryEmergencyContactNumber ?? student.secondaryEmergencyContactNumber,
+            emergencyContactNumber: validData.emergencyContactNumber ?? student.emergencyContactNumber,
+        }
 
         const doEdit = () => edit({
             body: {
                 ...validData,
+                firstName: childFirstName,
+                lastName: childLastName,
                 childDateOfBirth: validDOB,
                 gradeLevel: validGradeLevel
             }
-        }).then(entry => {
-            if (entry)
-                toast.success(`Successfully edited ${entry.childFirstName} ${entry.childLastName}`)
-            return entry
+        }).then(async (student) => {
+            if (student) {
+                toast.success(`Successfully edited ${student.firstName} ${student.lastName}`)
+                await mutateStudent(optimisticData)
+                if (onEdit)
+                    onEdit()
+            }
+            return student
         })
 
-        if (editOptimisticEntry) {
-            editOptimisticEntry(doEdit, {
-                ...entry,
-                childFirstName: validData.childFirstName ?? entry.childFirstName,
-                childLastName: validData.childLastName ?? entry.childLastName,
-                childDateOfBirth: validDOB?.toString() ?? entry.childDateOfBirth,
-                gradeLevel: validGradeLevel ?? entry.gradeLevel,
-                streetName: validData.streetName ?? entry.streetName,
-                city: validData.city ?? entry.city,
-                parish: validData.parish ?? entry.parish,
-                secondaryEmergencyContactNumber: validData.secondaryEmergencyContactNumber ?? entry.secondaryEmergencyContactNumber,
-                emergencyContactNumber: validData.emergencyContactNumber ?? entry.emergencyContactNumber,
-
-            })
-
-            if (onEdit)
-                onEdit()
-        }
-    }, [edit, editOptimisticEntry, entry, onEdit])
+        if (editOptimisticStudent)
+            await editOptimisticStudent(doEdit, optimisticData)
+    }, [student, editOptimisticStudent, edit, mutateStudent, onEdit])
 
     const updateFormState = useCallback((key: keyof EditRegistrationFormProps, val: unknown) => {
         setFormState(prev => ({
@@ -116,9 +101,10 @@ const EditRegistrationForm: FC<Props> = ({entry, onEdit}) => {
             <Title>General Information</Title>
             <div className="flex gap-x-6 phone:flex-col">
                 <Input
+                    isDisabled={isEditing}
                     id="childFirstName"
                     register={register}
-                    value={formState.childFirstName ?? entry.childFirstName}
+                    value={formState.childFirstName ?? student.firstName}
                     onValueChange={val => updateFormState('childFirstName', val)}
                     label="Child First Name"
                     aria-label="Child First Name"
@@ -126,8 +112,9 @@ const EditRegistrationForm: FC<Props> = ({entry, onEdit}) => {
                 />
                 <Input
                     id="childLastName"
+                    isDisabled={isEditing}
                     register={register}
-                    value={formState.childLastName ?? entry.childLastName}
+                    value={formState.childLastName ?? student.lastName}
                     onValueChange={val => updateFormState('childLastName', val)}
                     aria-label="Child Last Name"
                     label="Child Last Name"
@@ -137,7 +124,8 @@ const EditRegistrationForm: FC<Props> = ({entry, onEdit}) => {
             <Input
                 id="childDateOfBirth"
                 register={register}
-                value={formState.childDateOfBirth ?? formatDate(new Date(entry.childDateOfBirth), "-")}
+                isDisabled={isEditing}
+                value={formState.childDateOfBirth ?? formatDate(new Date(student.childDateOfBirth), "-")}
                 onValueChange={val => updateFormState('childDateOfBirth', val)}
                 type='date'
                 label="Date Of Birth"
@@ -147,9 +135,10 @@ const EditRegistrationForm: FC<Props> = ({entry, onEdit}) => {
             <Select
                 id="gradeLevel"
                 register={register}
+                isDisabled={isEditing}
                 label="Grade Level"
                 //@ts-ignore
-                selectedKeys={[formState.gradeLevel ?? parseGradeLevel(entry.gradeLevel)]}
+                selectedKeys={[formState.gradeLevel ?? parseGradeLevel(student.gradeLevel)]}
                 onSelectionChange={selection => {
                     const selectedKey = (Array.from(selection) as string[])[0]
                     updateFormState('gradeLevel', selectedKey)
@@ -162,21 +151,23 @@ const EditRegistrationForm: FC<Props> = ({entry, onEdit}) => {
             <Divider/>
             <Title>Communication Information</Title>
             <Input
+                isDisabled={isEditing}
                 id="streetName"
                 register={register}
                 label="Lot #, Street Name"
                 aria-label="Street"
                 isClearable
-                value={formState.streetName ?? entry.streetName}
+                value={formState.streetName ?? student.streetName}
                 onValueChange={val => updateFormState('streetName', val)}
             />
             <div className="flex gap-6 phone:flex-col">
                 <Input
+                    isDisabled={isEditing}
                     id="city"
                     register={register}
                     label="City"
                     aria-label="City"
-                    value={formState.city ?? entry.city}
+                    value={formState.city ?? student.city}
                     onValueChange={val => updateFormState('city', val)}
                     isClearable
                 />
@@ -185,7 +176,8 @@ const EditRegistrationForm: FC<Props> = ({entry, onEdit}) => {
                     register={register}
                     label="Parish"
                     aria-label="Parish"
-                    value={formState.parish ?? entry.parish}
+                    isDisabled={isEditing}
+                    value={formState.parish ?? student.parish}
                     onValueChange={val => updateFormState('parish', val)}
                     isClearable
                 />
@@ -195,7 +187,8 @@ const EditRegistrationForm: FC<Props> = ({entry, onEdit}) => {
                 type="tel"
                 pattern={"876-[0-9]{3}-[0-9]{4}"}
                 register={register}
-                value={formState.emergencyContactNumber ?? entry.emergencyContactNumber}
+                value={formState.emergencyContactNumber ?? student.emergencyContactNumber}
+                isDisabled={isEditing}
                 onValueChange={val => updateFormState('emergencyContactNumber', val)}
                 label="Emergency Contact"
                 aria-label="Street"
@@ -206,8 +199,9 @@ const EditRegistrationForm: FC<Props> = ({entry, onEdit}) => {
                 type="tel"
                 pattern={"876-[0-9]{3}-[0-9]{4}"}
                 register={register}
-                value={formState.secondaryEmergencyContactNumber ?? entry.secondaryEmergencyContactNumber}
+                value={formState.secondaryEmergencyContactNumber ?? student.secondaryEmergencyContactNumber}
                 onValueChange={val => updateFormState('secondaryEmergencyContactNumber', val)}
+                isDisabled={isEditing}
                 label="Secondary Emergency Contact"
                 aria-label="Street"
                 isClearable
@@ -215,6 +209,8 @@ const EditRegistrationForm: FC<Props> = ({entry, onEdit}) => {
             <Divider/>
             <div className="flex justify-end">
                 <Button
+                    isDisabled={isEditing}
+                    isLoading={isEditing}
                     color="primary"
                     variant="shadow"
                     startContent={<EditIcon/>}
@@ -227,4 +223,4 @@ const EditRegistrationForm: FC<Props> = ({entry, onEdit}) => {
     )
 }
 
-export default EditRegistrationForm
+export default EditStudentForm

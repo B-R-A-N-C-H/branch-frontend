@@ -4,7 +4,7 @@ export type Student = {
     id: string
     firstName: string,
     lastName: string,
-    gradeLevel: string,
+    gradeLevel: number,
     streetName: string,
     childDateOfBirth: string,
     city: string,

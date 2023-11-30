@@ -11,6 +11,7 @@ import Link from "next/link";
 import {Divider} from "@nextui-org/divider";
 import {useSession} from "next-auth/react";
 import DeleteStudentButton from "@/app/(site)/(internal)/admin/students/[id]/components/DeleteStudentButton";
+import EditStudentButton from "@/app/(site)/(internal)/admin/students/[id]/components/edit/EditStudentButton";
 
 type Props = {
     studentId: string,
@@ -54,10 +55,15 @@ const StudentView: FC<Props> = ({studentId, adminView}) => {
                             </Title>
                             <p className="text-secondary">Date of Birth: {new Date(student.childDateOfBirth)
                                 .toLocaleDateString("en", {
-                                dateStyle: "medium"
-                            })}</p>
+                                    dateStyle: "medium"
+                                })}</p>
                         </div>
-                        {adminView && <DeleteStudentButton student={student} />}
+                        {adminView && (
+                            <Fragment>
+                                <EditStudentButton student={student} mutateStudent={mutateStudent}/>
+                                <DeleteStudentButton student={student}/>
+                            </Fragment>
+                        )}
                     </div>
                     <Spacer y={12}/>
                     <Title>Contact Information</Title>

@@ -67,6 +67,16 @@ const UserProfile: FC = () => {
                     >
                         Registration
                     </DropdownItem>
+                    <DropdownItem
+                        as={Link}
+                        href="/children"
+                        key="manage_children"
+                        color="secondary"
+                        isReadOnly
+                        startContent={<PeopleStrokeIcon width={20}/>}
+                    >
+                        View Registered Children
+                    </DropdownItem>
                     {
                         memberHasRole(member, Role.HEAD_TEACHER) ? (
                                 <DropdownItem

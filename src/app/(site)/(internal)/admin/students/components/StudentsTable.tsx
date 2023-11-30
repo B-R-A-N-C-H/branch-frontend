@@ -8,6 +8,7 @@ import {Student} from "@/app/utils/types/models/student";
 import Input from "@/app/(site)/components/inputs/Input";
 import {EyeIcon, SearchIcon} from "@nextui-org/shared-icons";
 import Link from "next/link";
+import {useSession} from "next-auth/react";
 
 const columns: Column[] = [
     {
@@ -28,7 +29,7 @@ const columns: Column[] = [
     }
 ]
 
-const fetchKeyValue = (student: Student, key: Key) => {
+const fetchKeyValue = (student: Student, key: Key, adminView: boolean = false) => {
     switch (key) {
         case "student_name": {
             return <p className="capitalize">{student.firstName.toLowerCase()} {student.lastName.toLowerCase()}</p>
@@ -57,7 +58,7 @@ const fetchKeyValue = (student: Student, key: Key) => {
                             color="primary"
                             variant="flat"
                             as={Link}
-                            href={`/admin/students/${student.id}`}
+                            href={adminView ? `/admin/students/${student.id}` : `/children/${student.id}`}
                         >
                             <EyeIcon/>
                         </Button>
@@ -68,11 +69,18 @@ const fetchKeyValue = (student: Student, key: Key) => {
     }
 }
 
-const StudentsTable: FC = () => {
+type Props = {
+    childrenOnly?: boolean,
+    adminView?: boolean,
+}
+
+const StudentsTable: FC<Props> = ({childrenOnly, adminView}) => {
+    const {data: session} = useSession()
     const {contents: {data: students, loading: studentsLoading}} = useStudents()
     const [search, setSearch] = useState<string>()
 
     const visibleStudents = useMemo(() => students
+            .filter(student => childrenOnly ? (student.parentId === session?.user.id) : true)
             .filter(student => search ? `${student.firstName} ${student.lastName}`
                 .toLowerCase()
                 .includes(search.toLowerCase()) : true
@@ -98,7 +106,7 @@ const StudentsTable: FC = () => {
                 {student => (
                     <TableRow key={student.id}>
                         {key => (
-                            <TableCell>{fetchKeyValue(student, key)}</TableCell>
+                            <TableCell>{fetchKeyValue(student, key, adminView)}</TableCell>
                         )}
                     </TableRow>
                 )}
