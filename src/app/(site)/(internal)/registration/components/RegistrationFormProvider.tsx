@@ -26,13 +26,13 @@ export type RegistrationEntryDto = {
     registrationPeriodId: string,
 }
 
-type FormProps = Omit<RegistrationEntryDto, 'gradeLevel' | 'childDateOfBirth' | 'registrationPeriodId'> & {
+export type RegistrationFormProps = Omit<RegistrationEntryDto, 'gradeLevel' | 'childDateOfBirth' | 'registrationPeriodId'> & {
     gradeLevel: string,
     childDateOfBirth: string,
 }
 
 type Context = {
-    form: Omit<UseFormReturn<FormProps>, "handleSubmit">,
+    form: Omit<UseFormReturn<RegistrationFormProps>, "handleSubmit">,
     currentPeriod?: RegistrationPeriod
 }
 
@@ -49,9 +49,9 @@ const RegistrationFormProvider: FC<Props> = ({children, onSubmit}) => {
     const {periods: {currentPeriod}} = useRegistrationPeriods()
     const {entries: {optimisticData: {addOptimisticData: addOptimisticEntry}}} = useRegistrationEntries()
     const {trigger: create} = CreateEntry()
-    const {handleSubmit, ...form} = useForm<FormProps>()
+    const {handleSubmit, ...form} = useForm<RegistrationFormProps>()
 
-    const submitHandler: SubmitHandler<FormProps> = useCallback(async (dto) => {
+    const submitHandler: SubmitHandler<RegistrationFormProps> = useCallback(async (dto) => {
         if (!currentPeriod)
             return
 

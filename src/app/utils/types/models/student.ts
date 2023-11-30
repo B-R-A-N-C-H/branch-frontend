@@ -6,6 +6,7 @@ export type Student = {
     lastName: string,
     gradeLevel: string,
     streetName: string,
+    childDateOfBirth: string,
     city: string,
     parish: string,
     emergencyContactNumber: string,

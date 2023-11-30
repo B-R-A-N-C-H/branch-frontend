@@ -5,6 +5,7 @@ export type UpdateStudentDto = Partial<{
     streetName: string,
     city: string,
     parish: string,
+    childDateOfBirth: string,
     emergencyContactNumber: string,
     secondaryEmergencyContactNumber: string,
 }>

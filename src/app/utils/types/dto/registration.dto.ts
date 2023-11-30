@@ -10,6 +10,8 @@ export type CreateRegistrationDto = {
     secondaryEmergencyContactNumber: string,
 }
 
+export type UpdateRegistrationEntryDto = Partial<CreateRegistrationDto>
+
 export type CreateRegistrationPeriodDto = {
     name: string,
     starts: Date,

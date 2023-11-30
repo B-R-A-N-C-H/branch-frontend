@@ -1,6 +1,6 @@
 "use client"
 
-import {FC, Key, ReactElement, useCallback, useMemo} from "react";
+import {FC, Fragment, Key, ReactElement, useCallback, useMemo} from "react";
 import Table, {Column} from "@/app/(site)/components/Table";
 import {RegistrationEntry} from "@/app/utils/types/models/registration";
 import {Chip, TableCell, TableRow} from "@nextui-org/react";
@@ -9,6 +9,8 @@ import CircledXIcon from "@/app/(site)/components/icons/CircledXIcon";
 import PendingIcon from "@/app/(site)/components/icons/PendingIcon";
 import DeleteRegistrationEntryButton
     from "@/app/(site)/(internal)/registration/components/DeleteRegistrationEntryButton";
+import EditRegistrationButton from "@/app/(site)/(internal)/registration/components/edit/EditRegistrationButton";
+import entry from "next/dist/server/typescript/rules/entry";
 
 type Props = {
     entries: RegistrationEntry[],
@@ -74,7 +76,12 @@ const RegistrationEntriesTable: FC<Props> = ({entries, actionContent}) => {
                 return (
                     <div className="flex gap-2">
                         {actionContent && actionContent(item)}
-                        {item.approved === null && <DeleteRegistrationEntryButton entry={item}/>}
+                        {item.approved === null && (
+                            <Fragment>
+                                <EditRegistrationButton entry={item}/>
+                                <DeleteRegistrationEntryButton entry={item}/>
+                            </Fragment>
+                        )}
                     </div>
                 )
             }
