@@ -3,12 +3,10 @@
 import {FC, Key, ReactElement, useCallback, useMemo} from "react";
 import Table, {Column} from "@/app/(site)/components/Table";
 import {RegistrationEntry} from "@/app/utils/types/models/registration";
-import {Button, Chip, TableCell, TableRow} from "@nextui-org/react";
-import TrashIcon from "@/app/(site)/components/icons/TrashIcon";
+import {Chip, TableCell, TableRow} from "@nextui-org/react";
 import CircledCheckIcon from "@/app/(site)/components/icons/CircledCheckIcon";
 import CircledXIcon from "@/app/(site)/components/icons/CircledXIcon";
 import PendingIcon from "@/app/(site)/components/icons/PendingIcon";
-import entry from "next/dist/server/typescript/rules/entry";
 import DeleteRegistrationEntryButton
     from "@/app/(site)/(internal)/registration/components/DeleteRegistrationEntryButton";
 

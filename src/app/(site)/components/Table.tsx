@@ -1,6 +1,6 @@
 "use client";
 
-import {Table as NextTable, TableBody, TableColumn, TableHeader, TableProps} from "@nextui-org/react";
+import {Spacer, Spinner, Table as NextTable, TableBody, TableColumn, TableHeader, TableProps} from "@nextui-org/react";
 import clsx from "clsx";
 import {RowElement} from "@react-types/table";
 import {JSX} from "react";
@@ -21,15 +21,15 @@ interface Props<T> extends Omit<TableProps, "children"> {
 }
 
 export default function Table<T>({
-                                            columns,
-                                            items,
-                                            sortableColumns,
-                                            emptyContent,
-                                            children,
-                                            loadingContent,
-                                            isLoading,
-                                            ...tableProps
-                                        }: Props<T>) {
+                                     columns,
+                                     items,
+                                     sortableColumns,
+                                     emptyContent,
+                                     children,
+                                     loadingContent,
+                                     isLoading,
+                                     ...tableProps
+                                 }: Props<T>) {
     return (
         <NextTable
             {...tableProps}
@@ -50,9 +50,9 @@ export default function Table<T>({
             </TableHeader>
             <TableBody
                 items={items}
-                emptyContent={emptyContent}
+                emptyContent={!isLoading ? emptyContent : <></> }
                 isLoading={isLoading}
-                loadingContent={loadingContent}
+                loadingContent={loadingContent ?? <Spinner size="lg"/>}
             >
                 {children}
             </TableBody>
