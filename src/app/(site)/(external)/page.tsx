@@ -75,18 +75,21 @@ export default function Home() {
                 className="py-16 mx-auto max-w-[50%] phone:max-w-[80%] laptop:max-w-[75%] space-y-12"
             >
                 <Article title="About BRANCH" imageUrl="/assets/student-studying.svg">
-                    B.R.A.N.C.H, which stands for Basic Schools’ Registration Administration and Communications
-                    Hub, is a cutting-edge web-based application designed to revolutionize the administrative
-                    processes within educational institutions. Born out of a vision to streamline registration
-                    procedures, enhance communication channels, and modernize data management, B.R.A.N.C.H
-                    addresses the evolving needs of teachers, parents, and students alike. This platform serves
-                    as a comprehensive solution, seamlessly transitioning educational establishments from
-                    traditional paper-based record-keeping to a digital system. With a commitment to quality,
-                    flexibility, and adaptability, B.R.A.N.C.H empowers administrators with tools to efficiently
-                    manage registration periods, control user permissions, and retrieve critical student and
-                    staff information with ease. B.R.A.N.C.H represents a technological leap forward in
-                    education administration, fostering a dynamic and collaborative environment for all
-                    stakeholders in the learning process.
+                    Kensington Basic School, located in St. Catherine, B.R.A.N.C.H, has a history of establishing a
+                    good rapport between staff and parents. Basic Schools’ Registration Administration and
+                    Communications Hub, is a cutting-edge web-based application designed to revolutionize the
+                    administrative processes for Kensington Basic School. BRANCH seeks to fulfill the mission of
+                    &apos;Together we Build&apos; which is connected to their fundamental and core values of providing an equal
+                    opportunity to all students in reaching their highest cognitive social, physical, emotional and
+                    spiritual potential. This system was born out of the vision to allow all users to streamline
+                    registration procedures, enhance communication channels, and modernize data management. B.R.A.N.C.H
+                    addresses the evolving needs of teachers, parents, and students alike. This platform serves as a
+                    comprehensive solution, seamlessly transitioning educational establishments from traditional
+                    paper-based record-keeping to a digital system. With a commitment to quality, flexibility, and
+                    adaptability, B.R.A.N.C.H empowers administrators with tools to efficiently manage registration
+                    periods, control user permissions, and retrieve critical student and staff information with ease.
+                    B.R.A.N.C.H represents a technological leap forward in education administration, fostering a dynamic
+                    and collaborative environment for all stakeholders in the learning process.
                 </Article>
                 <Article title="Registration" imageUrl="/assets/student-registration.svg">
 

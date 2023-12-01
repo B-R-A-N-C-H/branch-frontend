@@ -85,7 +85,7 @@ const StudentsTable: FC<Props> = ({childrenOnly, adminView}) => {
                 .toLowerCase()
                 .includes(search.toLowerCase()) : true
             )
-        , [search, students])
+        , [childrenOnly, search, session?.user.id, students])
 
     return (
         <Fragment>
